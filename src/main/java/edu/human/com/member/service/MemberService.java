@@ -1,5 +1,7 @@
 package edu.human.com.member.service;
 
+import java.util.List;
+
 public interface MemberService {
-	public void selectMember() throws Exception;
+	public List<EmployerInfoVO> selectMember() throws Exception;
 }

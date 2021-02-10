@@ -3,7 +3,7 @@
 <mapper namespace="memberMapper">
 
 <select id="selectMember" resultType="edu.human.com.member.service.EmployerInfoVO">
-select * from lettnemplyinfo
+select * from lettnemplyrinfo
 </select>
 
 </mapper>
