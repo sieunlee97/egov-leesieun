@@ -22,4 +22,28 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+	@Override
+	public EmployerInfoVO viewMember(String emplyr_id) throws Exception {
+		// DAO클래스에서 메소드 호출
+		return memberDAO.viewMember(emplyr_id);
+	}
+
+	@Override
+	public void deleteMember(String emplyr_id) throws Exception {
+		// DAO클래스에서 메소드 호출
+		memberDAO.deleteMember(emplyr_id);
+	}
+
+	@Override
+	public void insertMember(EmployerInfoVO employerInfoVO) throws Exception {
+		// DAO클래스에서 메소드 호출
+		memberDAO.insertMember(employerInfoVO);
+	}
+
+	@Override
+	public void updateMember(EmployerInfoVO employerInfoVO) throws Exception {
+		// DAO클래스에서 메소드 호출
+		memberDAO.updateMember(employerInfoVO);		
+	}
+
 }
