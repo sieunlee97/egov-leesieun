@@ -29,9 +29,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void deleteMember(String emplyr_id) throws Exception {
+	public int deleteMember(String emplyr_id) throws Exception {
 		// DAO클래스에서 메소드 호출
-		memberDAO.deleteMember(emplyr_id);
+		return memberDAO.deleteMember(emplyr_id);
 	}
 
 	@Override

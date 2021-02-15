@@ -32,17 +32,49 @@ public class MemberTest {
 	private MemberService memberService;
 	
 	@Test
+	public void updateMember() throws Exception {
+		EmployerInfoVO memberVO = new EmployerInfoVO();
+		memberVO.setEMPLYR_ID("user_1");
+		memberVO.setUSER_NM("사용자_1");
+		//암호값이 공백이면, 쿼리에서 제외된다.
+		String secPassword = "";
+		memberVO.setPASSWORD(secPassword);
+		memberVO.setPASSWORD_HINT("사는 동네는?");
+		memberVO.setPASSWORD_CNSR("신방동");
+		memberVO.setEMAIL_ADRES(memberVO.getEMPLYR_ID()+"@abc.com");
+		memberVO.setSEXDSTN_CODE("F");
+		memberVO.setHOUSE_ADRES("집주소");
+		memberVO.setGROUP_ID("GROUP_00000000000000");
+		memberVO.setEMPLYR_STTUS_CODE("P"); //회원상태코드 P-활성, S-비활성
+		memberVO.setESNTL_ID("USRCNFRM_00000000000");
+		memberService.updateMember(memberVO);
+	}
+	
+	@Test
+	public void deleteMember() throws Exception {
+		int result = memberService.deleteMember("user_3");
+		if(result > 0) {
+			System.out.println("삭제되었습니다.");
+		} else {
+			System.out.println("삭제된 값이 없습니다.");
+		}
+		
+	}
+	
+	@Test
 	public void insertMember() throws Exception {
 		EmployerInfoVO memberVO = new EmployerInfoVO(); //고전방식 객체 생성
 		//memberVO에 set으로 값을 입력한 후, DB에 insert
-		memberVO.setEMPLYR_ID("user01");
+		//emplyr_id는 기본키이기 때문에, 중복허용하지 않게 처리(아래)
+		List<EmployerInfoVO> memberList = memberService.selectMember();
+		memberVO.setEMPLYR_ID("user_" + memberList.size());
 		memberVO.setORGNZT_ID("ORGNZT_0000000000000"); //외래키이기 때문에 
-		memberVO.setUSER_NM("사용자01");
+		memberVO.setUSER_NM("사용자_"+memberList.size());
 		//암호화작업 (아래) 스프링시큐리티X, egov전용 시큐리티 암호화("입력한문자","입력한ID")
 		String secPassword = EgovFileScrty.encryptPassword("1234", memberVO.getEMPLYR_ID());
 		memberVO.setPASSWORD(secPassword);
-		memberVO.setPASSWORD_HINT("아이디가 힌트");
-		memberVO.setPASSWORD_CNSR("");
+		memberVO.setPASSWORD_HINT("사는 동네는?");
+		memberVO.setPASSWORD_CNSR("쌍용동");
 		memberVO.setEMAIL_ADRES("abc@abc.com");
 		memberVO.setSEXDSTN_CODE("F");
 		memberVO.setHOUSE_ADRES("집주소");

@@ -71,10 +71,10 @@ now()
 </insert>
 
 <update id="updateMember">
-update lettnemplyrinfo set 
+update lettnemplyrinfo set
 ORGNZT_ID=#{ORGNZT_ID},
 USER_NM=#{USER_NM},
-<if test="PASSWORD != ''">
+<if test="PASSWORD !=''">
 PASSWORD=#{PASSWORD},
 </if>
 EMPL_NO=#{EMPL_NO},
@@ -99,6 +99,7 @@ PSTINST_CODE=#{PSTINST_CODE},
 EMPLYR_STTUS_CODE=#{EMPLYR_STTUS_CODE},
 ESNTL_ID=#{ESNTL_ID},
 CRTFC_DN_VALUE=#{CRTFC_DN_VALUE}
+
 where EMPLYR_ID=#{EMPLYR_ID}
 </update>
 
