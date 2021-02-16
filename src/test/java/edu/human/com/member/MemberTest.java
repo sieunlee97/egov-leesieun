@@ -76,7 +76,7 @@ public class MemberTest {
 		memberVO.setPASSWORD(secPassword);
 		memberVO.setPASSWORD_HINT("사는 동네는?");
 		memberVO.setPASSWORD_CNSR("쌍용동");
-		memberVO.setEMAIL_ADRES("abc@abc.com");
+		memberVO.setEMAIL_ADRES(memberVO.getEMPLYR_ID()+"@abc.com");
 		memberVO.setSEXDSTN_CODE("F");
 		memberVO.setHOUSE_ADRES("집주소");
 		memberVO.setGROUP_ID("GROUP_00000000000000");

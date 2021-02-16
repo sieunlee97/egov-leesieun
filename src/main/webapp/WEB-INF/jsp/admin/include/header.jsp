@@ -110,7 +110,7 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="./member_list.html" class="nav-link">
+                <a href="<c:url value='/admin/member/list_member.do' />" class="nav-link">
                   <!-- 메뉴 선택 시 활성화 active 되는 것은 jquery로 만들 예정 -->
                   <i class="far fa-circle nav-icon"></i>
                   <p>관리자 관리</p>

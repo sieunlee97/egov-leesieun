@@ -3,7 +3,11 @@
 <mapper namespace="memberMapper">
 
 <select id="selectMember" resultType="edu.human.com.member.service.EmployerInfoVO">
-select * from lettnemplyrinfo order by sbscrb_de desc
+SELECT EMPLYR_ID,USER_NM,EMAIL_ADRES,
+FN_CODE_NM('COM999',EMPLYR_STTUS_CODE) AS EMPLYR_STTUS_CODE,
+SBSCRB_DE,
+FN_GROUP_NM(GROUP_ID) AS GROUP_ID
+from lettnemplyrinfo order by sbscrb_de desc;
 </select>
 
 <select id="viewMember" resultType="edu.human.com.member.service.EmployerInfoVO">

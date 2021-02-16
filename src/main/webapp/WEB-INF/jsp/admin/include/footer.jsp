@@ -56,6 +56,26 @@
 <script src="<c:url value='/' />resources/demo.js"></script> <!-- 원래 경로 dist/js/demo.js -->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="<c:url value='/' />resources/dist/js/pages/dashboard.js"></script>
+<script>
+$(document).ready(function() {
+	//현재 선택된 URL 값을 가져오는 명령(아래)
+	var current = location.pathname;//current변수저장소에서 board, member 클릭한 내용 확인
+	var current_2 = current.split("/")[2];//split분리함수로 current에있는 문자를 분리한 배열값을 반환.
+	$(".nav-treeview li a").each(function() {
+		if( $(this).attr('href').indexOf(current_2) != -1)	{
+			//위 문제를 처리하는 대체 함수 indexOf사용
+			if(current_2 != 'board'){
+				$(this).addClass("active");//선택한 메뉴의 배경색상을 흰색으로 보이게 추가하는 처리.
+			}
+		} else {
+			if(current_2 != 'board'){
+				$(this).removeClass("active");//선택하지 않은 메뉴의 배경색상 흰색을 제거하는 처리.
+			}
+		}
+	});
+});
+</script>
+
 </body>
 </html>
  <!-- 관리자단 푸터 끝 -->
