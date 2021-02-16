@@ -35,6 +35,7 @@ public class MemberTest {
 	public void updateMember() throws Exception {
 		EmployerInfoVO memberVO = new EmployerInfoVO();
 		memberVO.setEMPLYR_ID("user_1");
+		memberVO.setORGNZT_ID("ORGNZT_0000000000000");
 		memberVO.setUSER_NM("사용자_1");
 		//암호값이 공백이면, 쿼리에서 제외된다.
 		String secPassword = "";
@@ -46,13 +47,13 @@ public class MemberTest {
 		memberVO.setHOUSE_ADRES("집주소");
 		memberVO.setGROUP_ID("GROUP_00000000000000");
 		memberVO.setEMPLYR_STTUS_CODE("P"); //회원상태코드 P-활성, S-비활성
-		memberVO.setESNTL_ID("USRCNFRM_00000000000");
+		//memberVO.setESNTL_ID("USRCNFRM_00000000000");
 		memberService.updateMember(memberVO);
 	}
 	
 	@Test
 	public void deleteMember() throws Exception {
-		int result = memberService.deleteMember("user_3");
+		int result = memberService.deleteMember("user_2");
 		if(result > 0) {
 			System.out.println("삭제되었습니다.");
 		} else {
@@ -80,7 +81,7 @@ public class MemberTest {
 		memberVO.setHOUSE_ADRES("집주소");
 		memberVO.setGROUP_ID("GROUP_00000000000000");
 		memberVO.setEMPLYR_STTUS_CODE("P"); //회원상태코드 P-활성, S-비활성
-		memberVO.setESNTL_ID("USRCNFRM_00000000000");
+		memberVO.setESNTL_ID("USRCNFRM_"+memberList.size()); //고유ID이기 때문에 중복되면 안됨.
 		memberService.insertMember(memberVO);
 	}
 	
