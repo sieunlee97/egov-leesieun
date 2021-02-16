@@ -90,7 +90,7 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
+            <a href="<c:url value='/' />" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 	사용자 홈
@@ -175,6 +175,10 @@
   <!-- Control Sidebar, 로그아웃 영역 -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
+    <div class="p-3 control-sidebar-content text-center">
+	    <h5>로그 아웃</h5><hr class="mb-2"/>
+	    <a href="<c:url value='/uat/uia/actionLogout.do' />" class="btn btn-lg btn-primary">로그아웃</a>
+    </div>
   </aside>
   <!-- /.control-sidebar -->
 </div>
