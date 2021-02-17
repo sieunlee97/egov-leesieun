@@ -36,4 +36,8 @@ public class MemberDAO extends EgovComAbstractMapper {
 	public Map<Object, Object> selectCodeMap(String code_id) throws Exception {
 		return selectMap("memberMapper.selectCodeMap", code_id, "CODE");
 	}
+	public Map<Object, Object> selectGroupMap() throws Exception {
+		//memberMapper 쿼리 호출
+		return selectMap("memberMapper.selectGroupMap", "GROUP_ID");
+	}
 }

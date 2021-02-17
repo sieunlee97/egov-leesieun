@@ -103,8 +103,9 @@
                   <div class="form-group">
                   	<label for="GROUP_ID">GROUP_ID</label>
                   	<select class="form-control" name="GROUP_ID" id="GROUP_ID">
-                  		<option value="ROLL_ADMIN">ROLL_ADMIN</option>
-                  		<option value="ROLL_USER" selected>ROLL_USER</option>
+                  		<c:forEach items="${groupMap}" var="sub">
+                  			<option value="${sub.value.GROUP_ID}" <c:out value="${(memberVO.GROUP_ID==sub.value.GROUP_ID)? 'selected':''}" /> >${sub.value.GROUP_NM}</option>
+                  		</c:forEach>
                		</select>
                   </div>
                   <div class="form-group">

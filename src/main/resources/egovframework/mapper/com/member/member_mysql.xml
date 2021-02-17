@@ -2,9 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="memberMapper">
 
+<select id="selectGroupMap" resultType="java.util.HashMap">
+select GROUP_ID, GROUP_NM from lettnauthorgroupinfo
+order by GROUP_DC asc
+</select>
+
 <select id="selectCodeMap" resultType="java.util.HashMap">
 select CODE, CODE_NM from lettccmmndetailcode 
-where CODE_ID = #{mapKey} 
+where CODE_ID = #{code_id} 
 </select>
 
 <select id="selectMember" resultType="edu.human.com.member.service.EmployerInfoVO">

@@ -11,4 +11,6 @@ public interface MemberService {
 	public void updateMember(EmployerInfoVO employerInfoVO) throws Exception;
 	//공통코드 맵타입 반환받기(아래)
 	public Map<Object, Object> selectCodeMap(String code_id) throws Exception;
+	//권한그룹 맵타입 반환받기(아래)
+	public Map<Object, Object> selectGroupMap() throws Exception;
 }
