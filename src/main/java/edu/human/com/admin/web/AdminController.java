@@ -24,7 +24,7 @@ public class AdminController {
 		//회원 수정 페이지 DB처리
 		memberService.updateMember(memberVO);
 		rdat.addFlashAttribute("msg", "수정"); //아래 view_member.jsp로 변수 msg값을 전송한다.
-		return "redirect:/admin/member/view_member.do?emply_id="+memberVO.getEMPLYR_ID();
+		return "redirect:/admin/member/view_member.do?emplyr_id="+memberVO.getEMPLYR_ID();
 	}
 	
 	@RequestMapping(value="/admin/member/view_member.do", method=RequestMethod.GET)

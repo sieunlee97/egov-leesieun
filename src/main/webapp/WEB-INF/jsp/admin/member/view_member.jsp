@@ -46,7 +46,7 @@
                   </div>
                   <div class="form-group">
                     <label for="PASSWORD">PASSWORD</label>
-                    <input type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="암호를 입력해주세요." required>
+                    <input type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="암호를 입력해주세요." >
                   </div>
                    <div class="form-group">
                     <label for="PASSWORD_HINT">PASSWORD_HINT</label>
@@ -74,18 +74,18 @@
                   </div>
                   <div class="form-group">
                   	<label for="HOUSE_ADRES">HOUSE_ADRES</label>
-                  	<input value="${memberVO.HOUSE_ADRES}" type="email" class="form-control" name="HOUSE_ADRES" id="HOUSE_ADRES" placeholder="주소를 입력해주세요." required>
+                  	<input value="${memberVO.HOUSE_ADRES}" type="text" class="form-control" name="HOUSE_ADRES" id="HOUSE_ADRES" placeholder="주소를 입력해주세요." required>
                   </div>
                   <div class="form-group">
                   	<label for="ORGNZT_ID">ORGNZT_ID</label>
                   	<input value="${memberVO.ORGNZT_ID}" type="text" class="form-control" name="ORGNZT_ID" id="ORGNZT_ID" placeholder="소속기관명을 입력해주세요." required>
                   </div>
                   <div class="form-group">
-                  	<label for="enabled">EMPLYR_STTUS_CODE</label>
-                  	<select class="form-control" name="enabled" id="enabled">
+                  	<label for="EMPLYR_STTUS_CODE">EMPLYR_STTUS_CODE</label>
+                  	<select class="form-control" name="EMPLYR_STTUS_CODE" id="EMPLYR_STTUS_CODE">
                		<c:forEach items="${codeMap}" var="sub">
                   		<!-- Key is ${detailCode.value.CODE} and  Value is ${detailCode.value.CODE_NM}<br> -->
-                  		<option value="${sub.value.CODE}" <c:out value="${(memberVO.EMPLYR_STTUS_CODE==sub.value.CODE_NM)? 'selected':'' }" /> >${sub.value.CODE_NM}</option>
+                  		<option value="${sub.value.CODE}" <c:out value="${(memberVO.EMPLYR_STTUS_CODE==sub.value.CODE)? 'selected':'' }" /> >${sub.value.CODE_NM}</option>
                   	</c:forEach>
                		</select>
                		<!-- 위 코드 설명 : 맵 자료형을 jstl에서 출력하기(아래) -->
@@ -118,9 +118,10 @@
           
           <!-- 버튼영역 시작 -->
             <div class="card-body">
-              	<a href="member_list.html" class="btn btn-primary float-right mr-1">LIST ALL</a>              	
-              	<button type="submit" class="btn btn-warning float-right mr-1 text-white">SUBMIT</button>
+              	<a href="<c:url value='/admin/member/list_member.do' />" class="btn btn-primary float-right mr-1">LIST ALL</a>              	
+              	<button type="submit" class="btn btn-warning float-right mr-1 text-white">UPDATE</button>
               	<!-- a태그는 링크이동은 되지만, post값을 전송하지 못한다. 그래서 button태그를 사용. -->
+              	<button type="button" class="btn btn-danger float-right mr-1 text-white">DELETE</button>
               </div>
           <!-- 버튼영역 끝 -->
           

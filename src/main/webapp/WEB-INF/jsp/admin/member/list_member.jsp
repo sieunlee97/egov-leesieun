@@ -77,9 +77,19 @@
                       <td>${memberVO.USER_NM}</td>
                       <td>${memberVO.EMAIL_ADRES}</td>
                       <td>${memberVO.EMPLYR_STTUS_CODE}</td>
-                      <td>${memberVO.SBSCRB_DE}</td>
-                      <td><span class="badge bg-danger">${memberVO.GROUP_ID}</span></td> <!-- span은 자리를 차지하지 않음. 텍스트에 배지만 적용하기 위해 -->
-                      <!-- 권한표시는 부트스트랩 배지 클래스 사용 -->
+                      <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${memberVO.SBSCRB_DE}"/></td>    
+                      <td> <!-- span은 자리를 차지하지 않음. 텍스트에 배지만 적용하기 위해 -->
+	                      <!-- 권한표시는 부트스트랩 배지 클래스 사용 -->
+	                      <c:choose>
+	                      <c:when test="${memberVO.GROUP_ID eq '관리자그룹'}">
+	                       <td><span class="badge bg-danger">${memberVO.GROUP_ID}</span></td>
+	                       </c:when>
+	                      <c:when test="${memberVO.GROUP_ID ne '관리자그룹'}">
+	                       <td><span class="badge bg-success">${memberVO.GROUP_ID}</span></td>
+	                      </c:when>
+	                      </c:choose>
+                       <!-- <span class="badge bg-danger">${memberVO.GROUP_ID}</span>  -->
+                      </td>
                     </tr>
                     </c:forEach>
                   </tbody>
