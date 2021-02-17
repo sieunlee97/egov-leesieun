@@ -94,6 +94,10 @@
                   		<option value="ROLL_USER" selected>ROLL_USER</option>
                		</select>
                   </div>
+                  <div class="form-group">
+                  	<label for="ESNTL_ID">ESNTL_ID</label>
+                  	<input value="${memberVO.ESNTL_ID}" type="text" class="form-control" name="ESNTL_ID" id="ESNTL_ID" placeholder="게시판관리고유ID을 입력해주세요." readonly required>
+                  </div>
                 </div>
                 <!-- /.card-body -->
              </div> <!-- /.card card-primary -->

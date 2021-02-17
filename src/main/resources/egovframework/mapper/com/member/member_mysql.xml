@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="memberMapper">
 
+<select id="selectCodeMap" resultType="java.util.HashMap">
+select CODE, CODE_NM from lettccmmndetailcode 
+where CODE_ID = #{CODE_ID} 
+</select>
+
 <select id="selectMember" resultType="edu.human.com.member.service.EmployerInfoVO">
 SELECT EMPLYR_ID,USER_NM,EMAIL_ADRES,
 FN_CODE_NM('COM999',EMPLYR_STTUS_CODE) AS EMPLYR_STTUS_CODE,

@@ -1,6 +1,7 @@
 package edu.human.com.member.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -31,5 +32,8 @@ public class MemberDAO extends EgovComAbstractMapper {
 	}
 	public void updateMember(EmployerInfoVO employerInfoVO) throws Exception {
 		update("memberMapper.updateMember", employerInfoVO);
+	}
+	public Map<Object, Object> selectCodeMap(String code_id) throws Exception {
+		return selectMap("memberMapper.selectCodeMap", code_id);
 	}
 }
