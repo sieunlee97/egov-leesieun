@@ -34,6 +34,6 @@ public class MemberDAO extends EgovComAbstractMapper {
 		update("memberMapper.updateMember", employerInfoVO);
 	}
 	public Map<Object, Object> selectCodeMap(String code_id) throws Exception {
-		return selectMap("memberMapper.selectCodeMap", code_id);
+		return selectMap("memberMapper.selectCodeMap", code_id, "CODE");
 	}
 }

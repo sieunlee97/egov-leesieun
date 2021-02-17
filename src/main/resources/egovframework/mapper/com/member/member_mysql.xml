@@ -4,7 +4,7 @@
 
 <select id="selectCodeMap" resultType="java.util.HashMap">
 select CODE, CODE_NM from lettccmmndetailcode 
-where CODE_ID = #{CODE_ID} 
+where CODE_ID = #{mapKey} 
 </select>
 
 <select id="selectMember" resultType="edu.human.com.member.service.EmployerInfoVO">

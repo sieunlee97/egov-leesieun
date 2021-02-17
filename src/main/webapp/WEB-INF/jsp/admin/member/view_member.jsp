@@ -83,8 +83,13 @@
                   <div class="form-group">
                   	<label for="enabled">EMPLYR_STTUS_CODE</label>
                   	<select class="form-control" name="enabled" id="enabled">
+                  	<!-- 
                   		<option value="P" <c:out value="${(memberVO.EMPLYR_STTUS_CODE=='P')? 'selected':'' }" /> >활성</option>
                   		<option value="S" <c:out value="${(memberVO.EMPLYR_STTUS_CODE=='S')? 'selected':'' }" /> >비활성</option>
+               		-->
+               		<c:forEach items="${codeMap}" var="detailCode" varStatus="cnt" >
+               			<option value="${codeMap.detailCode[cnt]}"></option>
+               		</c:forEach>
                		</select>
                   </div>
                   <div class="form-group">

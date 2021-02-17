@@ -101,15 +101,12 @@ public abstract class EgovComAbstractMapper extends EgovAbstractMapper {
 
 
 	@Override
-	public <K, V> Map<K, V> selectMap(String queryId, String mapKey) {
+	public <K, V> Map<K, V> selectMap(String queryId, Object parameterObject, String mapKey) {
 		// 공통코드를 위한 맵타입을 반환하는 sqlSesseion템플릿 사용(아래)
-		return getSqlSession().selectMap(queryId, mapKey);
+		return getSqlSession().selectMap(queryId, parameterObject, mapKey);
 	}
 
+	
 
-	
-	
-	
-	
-	
+
 }
