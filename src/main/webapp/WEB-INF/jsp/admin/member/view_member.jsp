@@ -83,14 +83,22 @@
                   <div class="form-group">
                   	<label for="enabled">EMPLYR_STTUS_CODE</label>
                   	<select class="form-control" name="enabled" id="enabled">
-                  	<!-- 
-                  		<option value="P" <c:out value="${(memberVO.EMPLYR_STTUS_CODE=='P')? 'selected':'' }" /> >활성</option>
-                  		<option value="S" <c:out value="${(memberVO.EMPLYR_STTUS_CODE=='S')? 'selected':'' }" /> >비활성</option>
-               		-->
-               		<c:forEach items="${codeMap}" var="detailCode" varStatus="cnt" >
-               			<option value="${codeMap.detailCode[cnt]}"></option>
-               		</c:forEach>
+               		<c:forEach items="${codeMap}" var="sub">
+                  		<!-- Key is ${detailCode.value.CODE} and  Value is ${detailCode.value.CODE_NM}<br> -->
+                  		<option value="${sub.value.CODE}" <c:out value="${(memberVO.EMPLYR_STTUS_CODE==sub.value.CODE_NM)? 'selected':'' }" /> >${sub.value.CODE_NM}</option>
+                  	</c:forEach>
                		</select>
+               		<!-- 위 코드 설명 : 맵 자료형을 jstl에서 출력하기(아래) -->
+               		<!-- 
+               		controller에서 codeMap변수에 담긴 자료 : {P={CODE=P, CODE_NM=활성}, S={CODE=S, CODE_NM=비활성}}
+               		P(키)={CODE=P, CODE_NM=활성 (값)} 키=값 형태
+               		selectCodeMap(interface-implement-DAO) 
+               		<option value="${sub.value.CODE}"> ${sub.value.CODE_NM} </option>
+               		1) sub.value - 1차적으로 P={CODE=P, CODE_NM=활성} 키/값 분리해서 값 출력.
+               		 - 키: P / 값: {CODE=P, CODE_NM=활성}
+               		2) sub.value.CODE  - 2차적으로 {CODE=P, CODE_NM=활성} 키/값 분리해서 값 출력.
+               		 - 키: CODE, CODE_NM / 값: P, 활성
+               		 -->
                   </div>
                   <div class="form-group">
                   	<label for="GROUP_ID">GROUP_ID</label>
