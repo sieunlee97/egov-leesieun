@@ -17,13 +17,13 @@
 <수업>
 - 이클립스 빌드 속도 때문에 window-> preferences -> validation -> build탭의 체크 모두 해제
 - [X] web 패키지(컨트롤러) 작업 + AdminLTE로 뷰 jsp단 작업. (마이바티스기반 - 새로 만들기)
-- 코드 인스펙션(소스분석): egov프로젝트의 진입점(webapp/index.jsp) 확인
-- egov프로젝트의 jsp(동적페이지)폴더에 html(정적페이지)를 jsp로 변환해서 배치
-- 관리자단 home.jsp > header, footer로 분리
+- jsp단의 root(최상위)경로를 html태그의 /에서 <c:url value='/' />로 변경
 - /admin/home.do URL액션을 주는 설정(web.xml) 확인.
 - /admin/**/*.do URL액션에 로그인체크권한설정 추가(egov-com-servlet.xml)
-- 결과는 사용자(기존)과 관리자단 분리.
-- jsp단의 root(최상위)경로를 html태그의 /에서 <c:url value='/' />로 변경
+- 결과적으로는 사용자(기존)과 관리자단 분리.
+- 관리자단 home.jsp > header, footer로 분리
+- 코드 인스펙션(소스분석): egov프로젝트의 진입점(webapp/index.jsp) 확인
+- egov프로젝트의 jsp(동적페이지)폴더에 html(정적페이지)를 jsp로 변환해서 배치
 - 쿼리에 MySQL 함수(function)사용해서 code_nm, group_nm 출력되도록 함
  
 
