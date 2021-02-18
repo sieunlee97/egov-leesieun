@@ -30,6 +30,8 @@ public class AdminController {
 	@RequestMapping(value="/admin/member/insert_member.do", method=RequestMethod.GET)
 	public String insert_member(Model model) throws Exception {
 		//입력폼 호출
+		model.addAttribute("codeMap", memberService.selectCodeMap("COM999"));
+		model.addAttribute("groupMap", memberService.selectGroupMap());
 		return "admin/member/insert_member";
 	}
 	

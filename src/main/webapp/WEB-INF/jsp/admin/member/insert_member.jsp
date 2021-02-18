@@ -78,7 +78,7 @@
                   </div>
                   <div class="form-group">
                   	<label for="ORGNZT_ID">ORGNZT_ID</label>
-                  	<input type="text" class="form-control" name="ORGNZT_ID" id="ORGNZT_ID" placeholder="소속기관명을 입력해주세요." required>
+                  	<input value="ORGNZT_0000000000000" type="text" class="form-control" name="ORGNZT_ID" id="ORGNZT_ID" placeholder="소속기관명을 입력해주세요." readonly required>
                   </div>
                   <div class="form-group">
                   	<label for="EMPLYR_STTUS_CODE">EMPLYR_STTUS_CODE</label>
@@ -119,9 +119,8 @@
           <!-- 버튼영역 시작 -->
             <div class="card-body">
               	<a href="<c:url value='/admin/member/list_member.do' />" class="btn btn-primary float-right mr-1">목록</a>              	
-              	<button type="submit" class="btn btn-warning float-right mr-1 text-white">수정</button>
+              	<button id="btn_insert" type="submit" class="btn btn-warning float-right mr-1 text-white" disabled>등록</button>
               	<!-- a태그는 링크이동은 되지만, post값을 전송하지 못한다. 그래서 button태그를 사용. -->
-              	<button id="btn_delete" type="button" class="btn btn-danger float-right mr-1 text-white">삭제</button>
               </div>
           <!-- 버튼영역 끝 -->
           
@@ -140,13 +139,28 @@
 <%@ include file="../include/footer.jsp" %>
 <script>
 $(document).ready(function(){
-	$("#btn_delete").on("click", function() {
-		if(confirm("정말로 삭제하시겠습니까?")){
-			var delete_form = $("form[name='write_form']")
-			delete_form.attr("action","<c:url value='/admin/member/delete_member.do' />");	
-			delete_form.submit();
-		}
-	
+	// EMPLYR_ID 중복체크 이후 submit버튼 disabled=false로 활성화시키면 전송 가능 ajax
+	// blur조건 focus의 반대
+	$("#EMPLYR_ID").bind("blur", function() {
+		var emplyr_id = $(this).val();
+		$.ajax({
+			type:"get",//jsp에서 controller로 보내는 방식
+			url:"<c:url value='/' />idcheck?emplyr_id="+emplyr_id, //@Response 사용하는 클래스의 메소드 매핑 URL
+			dataType:"text", //컨트롤러에서 ajax결과를 받는 방식
+			success:function(result){
+				if(result == "0") { //중복ID가 없다면
+					alert("사용 가능한 아이디입니다.");
+					$("#btn_insert").attr("disabled", false); //submit버튼 활성화
+				} else { //중복ID가 있다면
+					alert("중복 아이디가 존재합니다.");
+					$("#btn_insert").attr("disabled", true); //submit버튼 비활성화
+				}
+			},
+			error:function(){
+				alert("RestAPI서버에 문제가 발생했습니다.");
+			}
+		});
+		
 	});
 });
 </script>
