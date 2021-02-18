@@ -18,9 +18,26 @@ import edu.human.com.member.service.MemberService;
 public class AdminController {
 	@Inject
 	private MemberService memberService;
+	
+	@RequestMapping(value="/admin/member/insert_member.do", method=RequestMethod.POST)
+	public String insert_member(EmployerInfoVO memberVO,RedirectAttributes rdat) throws Exception {
+		//입력DB처리 호출
+		memberService.insertMember(memberVO);
+		rdat.addFlashAttribute("msg", "등록");
+		return "redirect:/admin/member/view_member.do";
+	}
+	
+	@RequestMapping(value="/admin/member/insert_member.do", method=RequestMethod.GET)
+	public String insert_member(Model model) throws Exception {
+		//입력폼 호출
+		return "admin/member/insert_member";
+	}
+	
 	@RequestMapping(value="/admin/member/delete_member.do", method=RequestMethod.POST)
-	public String delete_member() throws Exception {
-		return null;
+	public String delete_member(EmployerInfoVO memberVO, RedirectAttributes rdat) throws Exception {
+		memberService.deleteMember(memberVO.getEMPLYR_ID());
+		rdat.addFlashAttribute("msg", "삭제");
+		return "redirect:/admin/member/list_member.do";
 	}
 	
 	@RequestMapping(value="/admin/member/update_member.do", method=RequestMethod.POST)

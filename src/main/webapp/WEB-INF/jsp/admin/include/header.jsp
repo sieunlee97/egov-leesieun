@@ -30,6 +30,15 @@
   <link rel="stylesheet" href="<c:url value='/' />resources/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="<c:url value='/' />resources/plugins/summernote/summernote-bs4.min.css">
+<script>
+if("${msg}" != ''){
+	if("${msg}" == '삭제'){
+		alert("${msg}가 완료되었습니다.");
+	} else {
+		alert("${msg}이 완료되었습니다.");
+	}
+}
+</script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">

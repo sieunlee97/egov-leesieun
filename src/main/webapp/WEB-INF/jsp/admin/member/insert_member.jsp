@@ -9,12 +9,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">회원수정</h1>
+            <h1 class="m-0">회원등록</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">회원수정</li>
+              <li class="breadcrumb-item active">회원등록</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -30,62 +30,62 @@
           <div class="col-12"><!-- 그리드시스템중 12가로칼럼 width:100% -->
           
           <!-- form start -->
-          <form name="write_form" action="<c:url value='/admin/member/update_member.do' />" method="post">
+          <form name="write_form" action="<c:url value='/admin/member/insert_member.do' />" method="post">
           <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">UPDATE Member</h3>
+                <h3 class="card-title">CREATE Member</h3>
               </div>
               <!-- /.card-header -->
               
                 <div class="card-body">
                   <div class="form-group">
                     <label for="EMPLYR_ID">EMPLYR_ID</label>
-                    <input value="${memberVO.EMPLYR_ID}" type="text" class="form-control" name="EMPLYR_ID" id="EMPLYR_ID" placeholder="ID를 입력해주세요." readonly required>
+                    <input type="text" class="form-control" name="EMPLYR_ID" id="EMPLYR_ID" placeholder="ID를 입력해주세요." required>
                   <!-- form에서 input같은 입력태그에는 name 속성이 반드시 필요.name 속성값 = DB 필드 속성명
                   DB에 입력할 때 값을 전송하게 되는데 전송값을 저장하는 이름이 name이 되고,위에서는 user_id이다.-->
                   </div>
                   <div class="form-group">
                     <label for="PASSWORD">PASSWORD</label>
-                    <input type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="암호를 입력해주세요." >
+                    <input type="password" class="form-control" name="PASSWORD" id="PASSWORD" placeholder="암호를 입력해주세요." required>
                   </div>
                    <div class="form-group">
                     <label for="PASSWORD_HINT">PASSWORD_HINT</label>
-                    <input value="${memberVO.PASSWORD_HINT}" type="text" class="form-control" name="PASSWORD_HINT" id="PASSWORD_HINT" placeholder="암호 힌트를 입력해주세요." required>
+                    <input type="text" class="form-control" name="PASSWORD_HINT" id="PASSWORD_HINT" placeholder="암호 힌트를 입력해주세요." required>
                   </div>
                   <div class="form-group">
                     <label for="PASSWORD_CNSR">PASSWORD_CNSR</label>
-                    <input value="${memberVO.PASSWORD_CNSR}" type="text" class="form-control" name="PASSWORD_CNSR" id="PASSWORD_CNSR" placeholder="답변을 입력해주세요." required>
+                    <input type="text" class="form-control" name="PASSWORD_CNSR" id="PASSWORD_CNSR" placeholder="답변을 입력해주세요." required>
                   </div>
                   <div class="form-group">
                   	<label for="USER_NM">USER_NM</label>
-                  	<input value="${memberVO.USER_NM}" type="text" class="form-control" name="USER_NM" id="USER_NM" placeholder="이름을 입력해주세요." required>
+                  	<input type="text" class="form-control" name="USER_NM" id="USER_NM" placeholder="이름을 입력해주세요." required>
                   	<!-- 필수 입력값은 html5에서 지원하는 유효성 검사 중 required 속성 사용해서 null값을 체크한다.(유효성검사) -->
                   </div>
                   <div class="form-group">
                   	<label for="SEXDSTN_CODE">SEXDSTN_CODE</label>
                   	<select class="form-control" name="SEXDSTN_CODE" id="SEXDSTN_CODE">
-                  		<option value="M" <c:out value="${(memberVO.SEXDSTN_CODE=='M')? 'selected':''}" /> >남자</option>
-                  		<option value="F" <c:out value="${(memberVO.SEXDSTN_CODE=='F')? 'selected':''}" /> >여자</option>
+                  		<option value="M">남자</option>
+                  		<option value="F">여자</option>
                		</select>
                   </div>
                   <div class="form-group">
                   	<label for="EMAIL_ADRES">EMAIL_ADRES</label>
-                  	<input value="${memberVO.EMAIL_ADRES}" type="email" class="form-control" name="EMAIL_ADRES" id="EMAIL_ADRES" placeholder="이메일주소를 입력해주세요." required>
+                  	<input type="email" class="form-control" name="EMAIL_ADRES" id="EMAIL_ADRES" placeholder="이메일주소를 입력해주세요." required>
                   </div>
                   <div class="form-group">
                   	<label for="HOUSE_ADRES">HOUSE_ADRES</label>
-                  	<input value="${memberVO.HOUSE_ADRES}" type="text" class="form-control" name="HOUSE_ADRES" id="HOUSE_ADRES" placeholder="주소를 입력해주세요." required>
+                  	<input type="text" class="form-control" name="HOUSE_ADRES" id="HOUSE_ADRES" placeholder="주소를 입력해주세요." required>
                   </div>
                   <div class="form-group">
                   	<label for="ORGNZT_ID">ORGNZT_ID</label>
-                  	<input value="${memberVO.ORGNZT_ID}" type="text" class="form-control" name="ORGNZT_ID" id="ORGNZT_ID" placeholder="소속기관명을 입력해주세요." required>
+                  	<input type="text" class="form-control" name="ORGNZT_ID" id="ORGNZT_ID" placeholder="소속기관명을 입력해주세요." required>
                   </div>
                   <div class="form-group">
                   	<label for="EMPLYR_STTUS_CODE">EMPLYR_STTUS_CODE</label>
                   	<select class="form-control" name="EMPLYR_STTUS_CODE" id="EMPLYR_STTUS_CODE">
                		<c:forEach items="${codeMap}" var="sub">
                   		<!-- Key is ${detailCode.value.CODE} and  Value is ${detailCode.value.CODE_NM}<br> -->
-                  		<option value="${sub.value.CODE}" <c:out value="${(memberVO.EMPLYR_STTUS_CODE==sub.value.CODE)? 'selected':'' }" /> >${sub.value.CODE_NM}</option>
+                  		<option value="${sub.value.CODE}">${sub.value.CODE_NM}</option>
                   	</c:forEach>
                		</select>
                		<!-- 위 코드 설명 : 맵 자료형을 jstl에서 출력하기(아래) -->
@@ -104,13 +104,13 @@
                   	<label for="GROUP_ID">GROUP_ID</label>
                   	<select class="form-control" name="GROUP_ID" id="GROUP_ID">
                   		<c:forEach items="${groupMap}" var="sub">
-                  			<option value="${sub.value.GROUP_ID}" <c:out value="${(memberVO.GROUP_ID==sub.value.GROUP_ID)? 'selected':''}" /> >${sub.value.GROUP_NM}</option>
+                  			<option value="${sub.value.GROUP_ID}">${sub.value.GROUP_NM}</option>
                   		</c:forEach>
                		</select>
                   </div>
                   <div class="form-group">
                   	<label for="ESNTL_ID">ESNTL_ID</label>
-                  	<input value="${memberVO.ESNTL_ID}" type="text" class="form-control" name="ESNTL_ID" id="ESNTL_ID" placeholder="게시판관리고유ID을 입력해주세요." readonly required>
+                  	<input type="text" class="form-control" name="ESNTL_ID" id="ESNTL_ID" placeholder="게시판관리고유ID을 입력해주세요." readonly required>
                   </div>
                 </div>
                 <!-- /.card-body -->
