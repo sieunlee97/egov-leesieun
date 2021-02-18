@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class AdminController {
@@ -22,9 +23,15 @@ public class AdminController {
 	@RequestMapping(value="/admin/member/insert_member.do", method=RequestMethod.POST)
 	public String insert_member(EmployerInfoVO memberVO,RedirectAttributes rdat) throws Exception {
 		//입력DB처리 호출
+		//1. egov암호화툴로 암호화
+		String formPassword = memberVO.getPASSWORD(); //jsp입력폼에서 전송된 암호값GET
+		String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getESNTL_ID());
+		memberVO.setPASSWORD(encPassword); //egov암호화툴로 암호화된 값 SET
+		//2. ESNTL_ID 고유 ID 생성
+		memberVO.setESNTL_ID("USRCNFRM_"+ memberVO.getEMPLYR_ID()); //고유ID값 SET
 		memberService.insertMember(memberVO);
 		rdat.addFlashAttribute("msg", "등록");
-		return "redirect:/admin/member/view_member.do";
+		return "redirect:/admin/member/list_member.do";
 	}
 	
 	@RequestMapping(value="/admin/member/insert_member.do", method=RequestMethod.GET)
@@ -45,6 +52,11 @@ public class AdminController {
 	@RequestMapping(value="/admin/member/update_member.do", method=RequestMethod.POST)
 	public String update_member(EmployerInfoVO memberVO, RedirectAttributes rdat) throws Exception {
 		//회원 수정 페이지 DB처리
+		if(memberVO.getPASSWORD() != null) {
+			String formPassword = memberVO.getPASSWORD();
+			String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getESNTL_ID());
+			memberVO.setPASSWORD(encPassword);
+		}
 		memberService.updateMember(memberVO);
 		rdat.addFlashAttribute("msg", "수정"); //아래 view_member.jsp로 변수 msg값을 전송한다.
 		return "redirect:/admin/member/view_member.do?emplyr_id="+memberVO.getEMPLYR_ID();
