@@ -145,7 +145,7 @@ $(document).ready(function(){
 		var emplyr_id = $(this).val();
 		$.ajax({
 			type:"get",//jsp에서 controller로 보내는 방식
-			url:"<c:url value='/' />idcheck?emplyr_id="+emplyr_id, //@Response 사용하는 클래스의 메소드 매핑 URL
+			url:"<c:url value='/' />idcheck.do?emplyr_id="+emplyr_id, //@ResponseBody 사용하는 클래스의 메소드 매핑 URL, 반환값이 페이지가 아니라 텍스트
 			dataType:"text", //컨트롤러에서 ajax결과를 받는 방식
 			success:function(result){
 				if(result == "0") { //중복ID가 없다면
