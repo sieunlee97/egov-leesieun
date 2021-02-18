@@ -18,14 +18,22 @@ FN_CODE_NM('COM999',EMPLYR_STTUS_CODE) AS EMPLYR_STTUS_CODE,
 SBSCRB_DE,
 FN_GROUP_NM(GROUP_ID) AS GROUP_ID
 from lettnemplyrinfo 
-where 1=1
-	<if test="search_type != null or search != '' ">
-		<if test=" search_type=='all' ">
-		</if>
-		<if test=" search_type=='id' ">
-		</if>
+<if test="search_type != null and search_type != '' ">
+where
+	<if test="search_type == 'all'.toString()">
+		EMPLYR_ID like concat('%', #{search_keyword}, '%')
+		or
+		USER_NM like concat('%', #{search_keyword}, '%')
 	</if>
+	<if test="search_type == 'user_id'.toString()">
+		EMPLYR_ID like concat('%', #{search_keyword}, '%')
+	</if>
+	<if test="search_type == 'user_name'.toString()">
+		USER_NM like concat('%', #{search_keyword}, '%')
+	</if>
+</if>
 order by sbscrb_de desc
+LIMIT #{queryStartNo}, #{queryPerPageNum}
 </select>
 
 <select id="viewMember" resultType="edu.human.com.member.service.EmployerInfoVO">

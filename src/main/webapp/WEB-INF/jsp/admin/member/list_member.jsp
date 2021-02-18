@@ -33,12 +33,12 @@
                 <h3 class="card-title">회원 검색</h3>
                 <div class="card-tools">
                   
-                  <form name="search_form" action="member_list.html" method="get">
+                  <form name="search_form" action="<c:url value='/'/>admin/member/list_member.do" method="get">
                   <div class="input-group input-group-sm">
                   <!-- 부트스트랩 템플릿만으로는 디자인처리가 안되는 경우가 있기 때문에 종종 인라인스타일 사용 -->
                     <div>
-                       <select class="form-control">
-                            <option value="" selected>-전체-</option>
+                       <select name="search_type" class="form-control">
+                            <option value="all" selected>-전체-</option>
                             <option value="user_id" data-select2-id="8">ID</option>
                             <option value="user_name" data-select2-id="24">이름</option>
                        </select>
