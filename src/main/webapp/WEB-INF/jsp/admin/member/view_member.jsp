@@ -121,7 +121,7 @@
               	<a href="<c:url value='/admin/member/list_member.do' />" class="btn btn-primary float-right mr-1">LIST ALL</a>              	
               	<button type="submit" class="btn btn-warning float-right mr-1 text-white">UPDATE</button>
               	<!-- a태그는 링크이동은 되지만, post값을 전송하지 못한다. 그래서 button태그를 사용. -->
-              	<button type="button" class="btn btn-danger float-right mr-1 text-white">DELETE</button>
+              	<button id="btn_delete" type="button" class="btn btn-danger float-right mr-1 text-white">DELETE</button>
               </div>
           <!-- 버튼영역 끝 -->
           
@@ -138,3 +138,15 @@
   <!-- /.content-wrapper -->
 
 <%@ include file="../include/footer.jsp" %>
+<script>
+$(document).ready(function(){
+	$("#btn_delete").on("click", function() {
+		if(confirm("정말로 삭제하시겠습니까?")){
+			var delete_form = $("form[name='write_form']")
+			delete_form.attr("action","<c:url value='/admin/member/delete_member.do' />");	
+			delete_form.submit();
+		}
+	
+	});
+});
+</script>

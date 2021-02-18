@@ -18,6 +18,10 @@ import edu.human.com.member.service.MemberService;
 public class AdminController {
 	@Inject
 	private MemberService memberService;
+	@RequestMapping(value="/admin/member/delete_member.do", method=RequestMethod.POST)
+	public String delete_member() throws Exception {
+		return null;
+	}
 	
 	@RequestMapping(value="/admin/member/update_member.do", method=RequestMethod.POST)
 	public String update_member(EmployerInfoVO memberVO, RedirectAttributes rdat) throws Exception {
