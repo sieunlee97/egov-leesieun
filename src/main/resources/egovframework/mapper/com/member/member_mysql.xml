@@ -17,7 +17,15 @@ SELECT EMPLYR_ID,USER_NM,EMAIL_ADRES,
 FN_CODE_NM('COM999',EMPLYR_STTUS_CODE) AS EMPLYR_STTUS_CODE,
 SBSCRB_DE,
 FN_GROUP_NM(GROUP_ID) AS GROUP_ID
-from lettnemplyrinfo order by sbscrb_de desc;
+from lettnemplyrinfo 
+where 1=1
+	<if test="search_type != null or search != '' ">
+		<if test=" search_type=='all' ">
+		</if>
+		<if test=" search_type=='id' ">
+		</if>
+	</if>
+order by sbscrb_de desc
 </select>
 
 <select id="viewMember" resultType="edu.human.com.member.service.EmployerInfoVO">
