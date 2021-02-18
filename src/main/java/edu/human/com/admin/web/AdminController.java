@@ -23,9 +23,10 @@ public class AdminController {
 	@RequestMapping(value="/admin/member/insert_member.do", method=RequestMethod.POST)
 	public String insert_member(EmployerInfoVO memberVO,RedirectAttributes rdat) throws Exception {
 		//입력DB처리 호출
+		
 		//1. egov암호화툴로 암호화
 		String formPassword = memberVO.getPASSWORD(); //jsp입력폼에서 전송된 암호값GET
-		String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getESNTL_ID());
+		String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getEMPLYR_ID());
 		memberVO.setPASSWORD(encPassword); //egov암호화툴로 암호화된 값 SET
 		//2. ESNTL_ID 고유 ID 생성
 		memberVO.setESNTL_ID("USRCNFRM_"+ memberVO.getEMPLYR_ID()); //고유ID값 SET
@@ -54,7 +55,7 @@ public class AdminController {
 		//회원 수정 페이지 DB처리
 		if(memberVO.getPASSWORD() != null) {
 			String formPassword = memberVO.getPASSWORD();
-			String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getESNTL_ID());
+			String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getEMPLYR_ID());
 			memberVO.setPASSWORD(encPassword);
 		}
 		memberService.updateMember(memberVO);
