@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://egovframework.gov/ctl/ui" prefix="ui" %>
 <%@ include file="../include/header.jsp" %>
 
 <!-- Content Wrapper. Contains page content, 대시보드 본문 -->
@@ -43,14 +44,14 @@
                   <div class="input-group input-group-sm">
                   <!-- 부트스트랩 템플릿만으로는 디자인처리가 안되는 경우가 있기 때문에 종종 인라인스타일 사용 -->
                     <div>
-                       <select class="form-control">
-                            <option value="all" selected>-전체-</option>
-                            <option value="user_id" data-select2-id="8">제목</option>
-                            <option value="user_name" data-select2-id="24">내용</option>
+                       <select name="searchCnd" class="form-control">
+                            <option value="0" <c:if test="${searchVO.searchCnd == '0'}">selected="selected"</c:if> >제목</option>
+							<option value="1" <c:out value="${(searchVO.searchCnd == '1')? 'selected':''}" /> >내용</option>             
+							<option value="2" <c:if test="${searchVO.searchCnd == '2'}">selected="selected"</c:if> >작성자</option>
                        </select>
                     </div>
                     <div>
-                    	<input type="text" name="search_keyword" class="form-control float-right" placeholder="Search">
+                    	<input type="text" name="searchWrd" value='<c:out value="${searchVO.searchWrd}"/>' class="form-control float-right" placeholder="Search">
 					</div>
                     <div class="input-group-append">
                       <button type="submit" class="btn btn-default">
@@ -67,32 +68,38 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>bno</th> <!-- 테이블 헤드 타이틀태그 th -->
-                      <th>title[replycnt]</th>
-                      <th>writer</th>
-                      <th>regdate</th>
-                      <th>viewcnt</th>
+                      <th>번호</th> <!-- 테이블 헤드 타이틀태그 th -->
+                      <th>제목</th>
+                      <th>작성자</th>
+                      <th>작성일</th>
+                      <th>조회수</th>
                     </tr>
                   </thead>
                   <tbody>
+                  <c:forEach items="${resultList}" var="result" varStatus="status">
                     <tr>
-                      <td>1</td> <!-- table data 태그 -->
-                      <!-- 아래의 링크a 값은 리스트가 늘어날수록 동적으로  bno값이 변하게 된다. 개발자가 jsp처리 -->
-                      <td><a href="board_view.html?bno=1">첫번째 게시물 제목[2]</a></td>
-                      <td>admin</td>
-                      <td>2020-12-09</td>
-                      <td><span class="badge bg-danger">3</span></td>
+	                  <td>
+	                  <!-- 현재페이지 2페이지라고 가정 (아래) -->
+	                  <!-- 공지사항전체게시물수 10+1 - ((현재페이지번호2-1)*페이지당보여줄개수10)+forEach인덱스1 -->
+	                  <!-- 20~11 이전1페이지  > 이후 2페이지 결과 10부터 ~ -->
+	                  <c:out value="${paginationInfo.totalRecordCount+1 - ((searchVO.pageIndex-1) * searchVO.pageSize + status.count)}"/>
+	                  </td>   
+                      <td>
+	                      <!-- 답글일 경우 계단식표시 추가(아래) -->
+	                      <c:if test="${result.replyLc!=0}">
+				               <c:forEach begin="0" end="${result.replyLc}" step="1">
+				                    &nbsp;
+				               </c:forEach>
+				                &#8618;<!-- 화살표 특수문자 -->
+				          </c:if>
+	                      <a href="<c:url value='/admin/board/view_board.do' />">${result.nttSj}</a>
+                      </td>
+                      <td>${result.frstRegisterNm}</td>
+                      <td>${result.frstRegisterPnttm}</td>
+                      <td><span class="badge bg-danger">${result.inqireCo}</span></td>
                       <!-- 권한표시는 부트스트랩 배지 클래스 사용 -->
                     </tr>
-                    <tr>
-                      <td>2</td> <!-- table data 태그 -->
-                      <!-- 아래의 링크a 값은 리스트가 늘어날수록 동적으로  bno값이 변하게 된다. 개발자가 jsp처리 -->
-                      <td><a href="board_view.html?bno=1">두번째 게시물 제목[0]</a></td>
-                      <td>user02</td>
-                      <td>2020-12-09</td>
-                      <td><span class="badge bg-danger">0</span></td>
-                      <!-- 권한표시는 부트스트랩 배지 클래스 사용 -->
-                    </tr>
+                    </c:forEach>
                   </tbody>
                 </table>
               </div>
@@ -103,7 +110,7 @@
             
             <!-- 버튼영역 시작 -->
             <div class="card-body">
-            	<a href="board_write.html" class="btn btn-primary float-right">CREATE</a>
+            	<a href="<c:url value='/admin/board/insert_board.do' />" class="btn btn-primary float-right">CREATE</a>
             	<!-- 부트스트랩 디자인 버튼클래스를 이용해서 a태그를 버튼모양 만들기 -->
             	<!-- btn클래스명이 버튼모양을 변경, btn-primary클래스명의 버튼색상 변경 -->
             </div>
@@ -112,17 +119,11 @@
             <!-- 페이징처리 시작 -->
             <div class="pagination justify-content-center">
 	          	 <ul class="pagination">
-	              <li class="paginate_button page-item previous disabled" id="example1_previous"><a href="#" aria-controls="example1" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li>
-	              <!-- previous (위) -->
-	              <li class="paginate_button page-item active"><a href="#" aria-controls="example1" data-dt-idx="1" tabindex="0" class="page-link">1</a></li>
-	              <li class="paginate_button page-item "><a href="#" aria-controls="example1" data-dt-idx="2" tabindex="0" class="page-link">2</a></li>
-	              <li class="paginate_button page-item "><a href="#" aria-controls="example1" data-dt-idx="3" tabindex="0" class="page-link">3</a></li>
-	              <!-- next (아래) -->
-	              <li class="paginate_button page-item next" id="example1_next"><a href="#" aria-controls="example1" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li>
+	          	 	<ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="fn_egov_select_noticeList" />    
 	             </ul>
             </div>
             <!-- 페이징처리 끝 -->
-              
+
           </div>
         </div>
         
