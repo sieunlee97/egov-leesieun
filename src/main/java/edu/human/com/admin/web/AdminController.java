@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -79,7 +80,7 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value="/admin/member/list_member.do", method=RequestMethod.GET)
-	public String list_member(Model model, PageVO pageVO) throws Exception {
+	public String list_member(Model model, @ModelAttribute("pageVO") PageVO pageVO) throws Exception {
 		//회원관리 페이지 이동
 		if(pageVO.getPage() == null) {
 			pageVO.setPage(1);			
@@ -87,7 +88,10 @@ public class AdminController {
 		pageVO.setPerPageNum(5);
 		pageVO.setQueryPerPageNum(10);
 		List<EmployerInfoVO> listMember = memberService.selectMember(pageVO);
+		System.out.println("현재 검색된 회원의 total 카운트 : " + listMember.size());
+		pageVO.setTotalCount(listMember.size());
 		model.addAttribute("listMember", listMember);
+		// model.addAttribute("pageVO", pageVO); jsp로 보내는 대신에 @ModelAttribute사용
 		return "admin/member/list_member";
 	}
 	
