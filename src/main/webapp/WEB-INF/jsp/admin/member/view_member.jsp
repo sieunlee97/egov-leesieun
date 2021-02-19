@@ -118,7 +118,7 @@
           
           <!-- 버튼영역 시작 -->
             <div class="card-body">
-              	<a href="<c:url value='/admin/member/list_member.do' />" class="btn btn-primary float-right mr-1">목록</a>              	
+              	<a href="<c:url value='/admin/member/list_member.do?pageVO=${pageVO.page}&amp;search_type=${pageVO.search_type}&amp;search_keyword=${pageVO.search_keyword}' />" class="btn btn-primary float-right mr-1">목록</a>              	
               	<button type="submit" class="btn btn-warning float-right mr-1 text-white">수정</button>
               	<!-- a태그는 링크이동은 되지만, post값을 전송하지 못한다. 그래서 button태그를 사용. -->
               	<button id="btn_delete" type="button" class="btn btn-danger float-right mr-1 text-white">삭제</button>

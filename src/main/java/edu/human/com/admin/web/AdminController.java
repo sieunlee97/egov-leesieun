@@ -1,11 +1,14 @@
 package edu.human.com.admin.web;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,17 +18,90 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
 import edu.human.com.util.PageVO;
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.let.cop.bbs.service.BoardMasterVO;
+import egovframework.let.cop.bbs.service.BoardVO;
+import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
+import egovframework.let.cop.bbs.service.EgovBBSManageService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 public class AdminController {
 	@Inject
 	private MemberService memberService;
+	//스프링빈(new키워드 만드는 오브젝트X) 오브젝트를 사용하는 방법
+	// @Inject(자바8이상), @Autowired(많이사용), @Resource(자바7이하)
+	@Autowired
+	private EgovBBSAttributeManageService bbsAttrbService;
+	@Autowired
+	private EgovPropertyService propertyService;
+	@Autowired
+	private EgovBBSManageService bbsMngService;
+	
+	
+	@RequestMapping("/admin/board/list_board.do")
+	public String list_board(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
+		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+
+		boardVO.setBbsId(boardVO.getBbsId());
+		boardVO.setBbsNm(boardVO.getBbsNm());
+
+		BoardMasterVO vo = new BoardMasterVO();
+		System.out.println("디버그 : 게시판 아이디는 "+boardVO.getBbsId());
+		vo.setBbsId(boardVO.getBbsId());
+		vo.setUniqId(user.getUniqId());
+
+		BoardMasterVO master = bbsAttrbService.selectBBSMasterInf(vo);
+
+		//-------------------------------
+		// 방명록이면 방명록 URL로 forward
+		//-------------------------------
+		if (master.getBbsTyCode().equals("BBST04")) {
+		    return "forward:/cop/bbs/selectGuestList.do";
+		}
+		////-----------------------------
+
+		boardVO.setPageUnit(propertyService.getInt("pageUnit"));
+		boardVO.setPageSize(propertyService.getInt("pageSize"));
+
+		PaginationInfo paginationInfo = new PaginationInfo();
+
+		paginationInfo.setCurrentPageNo(boardVO.getPageIndex());
+		paginationInfo.setRecordCountPerPage(boardVO.getPageUnit());
+		paginationInfo.setPageSize(boardVO.getPageSize());
+
+		boardVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		boardVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		boardVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+
+		Map<String, Object> map = bbsMngService.selectBoardArticles(boardVO, vo.getBbsAttrbCode());
+		int totCnt = Integer.parseInt((String)map.get("resultCnt"));
+
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		//-------------------------------
+		// 기본 BBS template 지정
+		//-------------------------------
+		if (master.getTmplatCours() == null || master.getTmplatCours().equals("")) {
+		    master.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
+		}
+		////-----------------------------
+
+		model.addAttribute("resultList", map.get("resultList"));
+		model.addAttribute("resultCnt", map.get("resultCnt"));
+		model.addAttribute("boardVO", boardVO);
+		model.addAttribute("brdMstrVO", master);
+		model.addAttribute("paginationInfo", paginationInfo);
+		
+		return "admin/board/list_board";
+	}
 	
 	@RequestMapping(value="/admin/member/insert_member.do", method=RequestMethod.POST)
 	public String insert_member(EmployerInfoVO memberVO,RedirectAttributes rdat) throws Exception {
 		//입력DB처리 호출
-		
 		//1. egov암호화툴로 암호화
 		String formPassword = memberVO.getPASSWORD(); //jsp입력폼에서 전송된 암호값GET
 		String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getEMPLYR_ID());
@@ -66,7 +142,7 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value="/admin/member/view_member.do", method=RequestMethod.GET)
-	public String view_member(Model model, @RequestParam("emplyr_id") String emplyr_id) throws Exception {
+	public String view_member(Model model, @RequestParam("emplyr_id") String emplyr_id, @ModelAttribute("pageVO") PageVO pageVO) throws Exception {
 		//회원 상세보기[수정] 페이지 이동
 		EmployerInfoVO memberVO = memberService.viewMember(emplyr_id);
 		model.addAttribute("memberVO", memberVO);
