@@ -90,9 +90,17 @@
 				               <c:forEach begin="0" end="${result.replyLc}" step="1">
 				                    &nbsp;
 				               </c:forEach>
-				                &#8618;<!-- 화살표 특수문자 -->
+				                &#8627;<!-- 화살표 특수문자 -->
 				          </c:if>
-	                      <a href="<c:url value='/admin/board/view_board.do' />">${result.nttSj}</a>
+	                      <form name="view_form" action="<c:url value='/admin/board/view_board.do' />" method="post">
+	                      	<input type="hidden" name="bbsId" value="<c:out value='${boardVO.bbsId}'/>" />
+							<input type="hidden" name="nttId"  value="0" />
+							<input type="hidden" name="bbsTyCode" value="<c:out value='${brdMstrVO.bbsTyCode}'/>" />
+							<input type="hidden" name="bbsAttrbCode" value="<c:out value='${brdMstrVO.bbsAttrbCode}'/>" />
+							<input type="hidden" name="authFlag" value="<c:out value='${brdMstrVO.authFlag}'/>" />
+							<input name="pageIndex" type="hidden" value="<c:out value='${searchVO.pageIndex}'/>"/> 
+	                      	<span class="btn_submit" style="cursor:pointer;">${result.nttSj}</span>
+	                      </form>
                       </td>
                       <td>${result.frstRegisterNm}</td>
                       <td>${result.frstRegisterPnttm}</td>
@@ -134,3 +142,11 @@
   <!-- /.content-wrapper -->
 
 <%@ include file="../include/footer.jsp" %>
+<script>
+$(document).ready(function(){
+	$(".btn_submit").on("click", function(){
+		var form_object = $(this).parent("form[name='view_form']");
+		form_object.submit();
+	});
+});
+</script>

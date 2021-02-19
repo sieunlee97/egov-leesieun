@@ -9,11 +9,20 @@
 ----------------------------------------------------------------
 
 <수업>
-- egov 게시물관리 CRUD처리(관리자관리처럼 마이바티스 사용하지 않고, ibatis(기존클래스이용)적용)
-- egov 게시물관리는 컨트롤러와 JSP단만 처리(AdminLTE)
+
+- 전자정부표준프레임워크기반 심플홈템플릿 스프링웹프로젝트를 커스터마이징하는 중
+- 정부에서 발주해서 삼성SDS + LG CNS + SK C&C 컨소시엄으로 만들었습니다.(2011년 배포 ~ 지금까지)
+- 1.egov 게시물관리 CRUD처리(관리자관리처럼 마이바티스 사용하지 않고, ibatis(기존클래스이용)적용)
+- 2.egov 게시물관리는 컨트롤러와 JSP단만 처리(AdminLTE)
 - 위 두가지를 정리하면, 
 - 관리자(회원)관리는 컨트롤러+JSP+서비스+MyBatis를 우리가 만든 것 사용.
 - 게시물 관리는 컨트롤러+JSP는 우리가 만들고 서비스+iBatis는 전자정부가 만든 것 사용.
+- egov 프로젝트에서 세션이 발생하는 부분
+- > egovframework.let.uat.uia.web패키지 안 EgovLoginController.java
+- admin/board/list_board.jsp <-> EgovNoticeList.jsp
+- AdminController.java <-> EgovBBSManageController.java
+- egov페이징 UI설정 : context-common.xml -> ImagePaginationRenderer.java
+
 
 ### 20210218(목)
 - <작업예정>
