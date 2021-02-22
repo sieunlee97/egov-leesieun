@@ -93,13 +93,13 @@
 				                &#8627;<!-- 화살표 특수문자 -->
 				          </c:if>
 	                      <form name="view_form" action="<c:url value='/admin/board/view_board.do' />" method="post">
-	                      	<input type="hidden" name="bbsId" value="<c:out value='${boardVO.bbsId}'/>" />
-							<input type="hidden" name="nttId"  value="0" />
-							<input type="hidden" name="bbsTyCode" value="<c:out value='${brdMstrVO.bbsTyCode}'/>" />
-							<input type="hidden" name="bbsAttrbCode" value="<c:out value='${brdMstrVO.bbsAttrbCode}'/>" />
-							<input type="hidden" name="authFlag" value="<c:out value='${brdMstrVO.authFlag}'/>" />
-							<input name="pageIndex" type="hidden" value="<c:out value='${searchVO.pageIndex}'/>"/> 
-	                      	<span class="btn_submit" style="cursor:pointer;">${result.nttSj}</span>
+	                      	<input type="hidden" name="bbsId" value="<c:out value='${result.bbsId}'/>" />
+	                        <input type="hidden" name="nttId"  value="<c:out value="${result.nttId}"/>" />
+	                        <input type="hidden" name="bbsTyCode" value="<c:out value='${brdMstrVO.bbsTyCode}'/>" />
+	                        <input type="hidden" name="bbsAttrbCode" value="<c:out value='${brdMstrVO.bbsAttrbCode}'/>" />
+	                        <input type="hidden" name="authFlag" value="<c:out value='${brdMstrVO.authFlag}'/>" />
+	                        <input name="pageIndex" type="hidden" value="<c:out value='${searchVO.pageIndex}'/>"/>
+	                        <span class="btn_submit" style="cursor:pointer;"><c:out value="${result.nttSj}" /></span>
 	                      </form>
                       </td>
                       <td>${result.frstRegisterNm}</td>

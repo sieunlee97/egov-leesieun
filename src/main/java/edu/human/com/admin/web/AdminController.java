@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
+import edu.human.com.util.CommonUtil;
 import edu.human.com.util.PageVO;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
@@ -32,6 +33,8 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 public class AdminController {
 	@Inject
 	private MemberService memberService;
+	@Inject
+	private CommonUtil commUtil;
 	//스프링빈(new키워드 만드는 오브젝트X) 오브젝트를 사용하는 방법
 	// @Inject(자바8이상), @Autowired(많이사용), @Resource(자바7이하)
 	@Autowired
@@ -40,6 +43,8 @@ public class AdminController {
 	private EgovPropertyService propertyService;
 	@Autowired
 	private EgovBBSManageService bbsMngService;
+
+	
 	
 	@RequestMapping("/admin/board/view_board.do")
 	public String view_board(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
@@ -61,7 +66,12 @@ public class AdminController {
 
 		boardVO.setLastUpdusrId(user.getUniqId());
 		BoardVO vo = bbsMngService.selectBoardArticle(boardVO);
-
+		//시큐어코딩 시작(게시물제목/내용에서 자바스크립트 코드 제거)
+		String subject = commUtil.unscript(vo.getNttSj()); //게시물제목
+		String content = commUtil.unscript(vo.getNttCn()); //게시물내용
+		vo.setNttSj(subject);
+		vo.setNttCn(content);
+	
 		model.addAttribute("result", vo);
 
 		model.addAttribute("sessionUniqId", user.getUniqId());
@@ -93,7 +103,7 @@ public class AdminController {
 		boardVO.setBbsNm(boardVO.getBbsNm());
 
 		BoardMasterVO vo = new BoardMasterVO();
-		System.out.println("디버그 : 게시판 아이디는 "+boardVO.getBbsId());
+		System.out.println("디버그: 게시판아이디는 "+boardVO.getBbsId());
 		vo.setBbsId(boardVO.getBbsId());
 		vo.setUniqId(user.getUniqId());
 
