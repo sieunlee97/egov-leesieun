@@ -10,4 +10,14 @@ public class BoardDAO  extends EgovComAbstractMapper {
 		//egov매퍼 추상클래스 사용 : sqlSession템플릿 직접 접근하지 않고 사용
 		return delete("boardMapper.delete_board", nttId);
 	}
+
+	public Integer delete_attach(String atchFileId) {
+		// 마이바티스 매퍼쿼리 호출(첨부파일테이블)
+		return delete("boardMapper.delete_attach", atchFileId);
+	}
+
+	public int delete_attach_detail(String atchFileId) {
+		// 마이바티스 매퍼쿼리 호출(첨부파일상세테이블)
+		return delete("boardMapper.delete_attach_detail", atchFileId);
+	}
 }

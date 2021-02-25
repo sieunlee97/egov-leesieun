@@ -6,4 +6,11 @@
 delete from lettnbbs where ntt_id = #{NTT_ID}
 </delete>
 
+<delete id="delete_attach">
+delete from lettnfile where atch_file_Id = #{atchFileId}
+</delete>
+
+<delete id="delete_attach_detail">
+delete from lettnfiledetail where atch_file_Id = #{atchFileId}
+</delete>
 </mapper>

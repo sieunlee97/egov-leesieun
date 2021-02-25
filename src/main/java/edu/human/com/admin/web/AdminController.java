@@ -55,9 +55,12 @@ public class AdminController {
 	@RequestMapping("/admin/board/delete_board.do")
 	public String delete_board(BoardVO boardVO, RedirectAttributes rdat) throws Exception {
 		FileVO fileVO = new FileVO();
-		if(boardVO.getAtchFileId() != null || !"".equals(boardVO.getAtchFileId())) {
-			fileVO.setAtchFileId(boardVO.getAtchFileId());
-			fileMngService.deleteAllFileInf(fileVO);
+		if(boardVO.getAtchFileId() != null && !"".equals(boardVO.getAtchFileId())) {
+			System.out.println("디버그) 첨부파일 ID : "+boardVO.getAtchFileId());
+			//fileVO.setAtchFileId(boardVO.getAtchFileId());
+			//fileMngService.deleteAllFileInf(fileVO); //USE_AT='N', 삭제X
+			boardService.delete_attach(boardVO.getAtchFileId());
+			System.out.println("디버그 : 첨부파일 삭제 OK");
 		}
 		boardService.delete_board((int)boardVO.getNttId());
 		
