@@ -1,5 +1,6 @@
 package edu.human.com.admin.web;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -53,15 +54,27 @@ public class AdminController {
 
 	
 	@RequestMapping("/admin/board/delete_board.do")
-	public String delete_board(BoardVO boardVO, RedirectAttributes rdat) throws Exception {
-		FileVO fileVO = new FileVO();
+	public String delete_board(FileVO fileVO, BoardVO boardVO, RedirectAttributes rdat) throws Exception {
+		//FileVO fileVO = new FileVO();
 		if(boardVO.getAtchFileId() != null && !"".equals(boardVO.getAtchFileId())) {
 			System.out.println("디버그) 첨부파일 ID : "+boardVO.getAtchFileId());
 			//fileVO.setAtchFileId(boardVO.getAtchFileId());
 			//fileMngService.deleteAllFileInf(fileVO); //USE_AT='N', 삭제X
+			//물리파일 지우려면 2가지 값 필수 : file_stre_cours, stre_file_nm
+			
+			//실제 폴더에서 파일도 지우기(아래)
+			if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") { 
+				FileVO delfileVO = fileMngService.selectFileInf(fileVO);
+				File target = new File(delfileVO.getFileStreCours(), delfileVO.getStreFileNm());
+				if(target.exists()) {
+					target.delete();//폴더에서 기존첨부파일 지우기
+					System.out.println("디버그 : 첨부파일 삭제OK");
+				}
+			}
+			//첨부파일 레코드 삭제(아래)
 			boardService.delete_attach(boardVO.getAtchFileId());
-			System.out.println("디버그 : 첨부파일 삭제 OK");
 		}
+		//게시물 삭제(아래)
 		boardService.delete_board((int)boardVO.getNttId());
 		
 		rdat.addFlashAttribute("msg", "삭제");
