@@ -46,7 +46,7 @@
                 <hr>
                 <strong><i class="fas fa-pencil-alt mr-1"></i> 작성자</strong>
                 <p class="text-muted">
-                ${result.ntcrId}
+                ${result.frstRegisterNm}
                 </p>
                 <c:if test="${not empty result.atchFileId}">
 	                <hr>
@@ -104,7 +104,7 @@ $(document).ready(function(){
 	});
 	$("#btn_update").on("click", function(){
 		//alert("준비중입니다.");
-		action_form.attr("action", "<c:url value='/admin/board/update_board.do' />");
+		action_form.attr("action", "<c:url value='/admin/board/update_board_form.do' />");
 		action_form.submit();
 	});
 });
