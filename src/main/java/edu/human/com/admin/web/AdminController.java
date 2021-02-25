@@ -21,10 +21,12 @@ import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
 import edu.human.com.util.CommonUtil;
 import edu.human.com.util.PageVO;
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.let.cop.bbs.service.BoardMaster;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -51,7 +53,52 @@ public class AdminController {
 	private EgovBBSManageService bbsMngService;
 	@Autowired
 	private EgovFileMngService fileMngService;
+	@Autowired
+	private EgovMessageSource egovMessageSource;
+	
+	//게시물 수정화면으로 호출
+	@RequestMapping("/admin/board/update_board.do")
+	public String update_board(@ModelAttribute("searchVO") BoardVO boardVO, @ModelAttribute("board") BoardVO vo, ModelMap model)
+		    throws Exception {
 
+		// 로그인 체크 (비로그인시, 로그인 페이지로 이동)
+		if(!boardVO.getBbsId().equals("BBSMSTR_BBBBBBBBBBBB") && !EgovUserDetailsHelper.isAuthenticated()) {
+			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    	return "cmm/uat/uia/EgovLoginUsr";
+		}
+
+		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+
+		boardVO.setFrstRegisterId(user.getUniqId());
+
+		BoardMaster master = new BoardMaster();
+		BoardMasterVO bmvo = new BoardMasterVO();
+		BoardVO bdvo = new BoardVO();
+
+		vo.setBbsId(boardVO.getBbsId());
+
+		master.setBbsId(boardVO.getBbsId());
+		master.setUniqId(user.getUniqId());
+
+		if (isAuthenticated) {
+		    bmvo = bbsAttrbService.selectBBSMasterInf(master);
+		    bdvo = bbsMngService.selectBoardArticle(boardVO);
+		}
+
+		model.addAttribute("result", bdvo); //게시물 정보가 담긴 오브젝트(게시물제목, 내용, 첨부파일id,...)
+		model.addAttribute("bdMstr", bmvo); //게시판 정보가 담긴 오브젝트(게시판명, 게시판id,...)
+
+		//----------------------------
+		// 기본 BBS template 지정 게시판ID별로 필요한 디자인 css파일 변경시켜준다.
+		//----------------------------
+		if (bmvo.getTmplatCours() == null || bmvo.getTmplatCours().equals("")) {
+		    bmvo.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
+		}
+		model.addAttribute("brdMstrVO", bmvo); //위에서 정의된 bdMstr 모델과 같음. 두명 이상이 만들어서
+		////-----------------------------
+		return "admin/board/update_board";
+	}
 	
 	@RequestMapping("/admin/board/delete_board.do")
 	public String delete_board(FileVO fileVO, BoardVO boardVO, RedirectAttributes rdat) throws Exception {
