@@ -64,7 +64,6 @@
         <session-timeout>600</session-timeout>
     </session-config>
     
-    <!-- 
 	<error-page>
         <exception-type>java.lang.Throwable</exception-type>
         <location>/common/error.jsp</location>
@@ -77,5 +76,5 @@
         <error-code>500</error-code>
         <location>/common/error.jsp</location>
     </error-page>
-     -->
+
 </web-app>

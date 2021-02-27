@@ -27,6 +27,7 @@
         </property>
     </bean>-->
 			
+
 	<!-- 타일즈 jsp템플릿 리졸버 해석기 설정추가(아래) -->
 	<!-- 화면처리용 JSP 파일명의  prefix, suffix 처리에 대한 타일즈 설정추가 -->
 	<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"

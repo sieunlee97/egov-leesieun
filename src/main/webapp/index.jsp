@@ -19,5 +19,5 @@
 --%>
 <script type="text/javaScript">
 //document.location.href="<c:url value='/cmm/main/mainPage.do'/>"
-document.location.href="<c:url value='/home.do'/>"
+document.location.href="<c:url value='/tiles/home.do'/>"
 </script> 
