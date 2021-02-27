@@ -19,7 +19,15 @@ public class PageVO {
 	private String search_type; //검색조건(분류)
 	private String search_keyword; //검색어
 	
-//================================================================================	
+@Override
+	public String toString() {
+		return "PageVO [board_type=" + board_type + ", perPageNum=" + perPageNum + ", queryPerPageNum="
+				+ queryPerPageNum + ", page=" + page + ", queryStartNo=" + queryStartNo + ", prev=" + prev + ", next="
+				+ next + ", totalCount=" + totalCount + ", startPage=" + startPage + ", endPage=" + endPage
+				+ ", search_type=" + search_type + ", search_keyword=" + search_keyword + "]";
+	}
+
+	//================================================================================	
 	// 전체 클래스에서 [계산식] 4개 필요 -> 개발자가 만듦
 	// 계산식 4개로 반환되는 값 : startPage, endPage, prev, next
 	private void calcPage() {

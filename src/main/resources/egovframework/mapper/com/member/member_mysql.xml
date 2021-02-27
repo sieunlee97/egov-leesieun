@@ -69,7 +69,7 @@ EMPLYR_STTUS_CODE,
 ESNTL_ID,
 CRTFC_DN_VALUE,
 SBSCRB_DE
-) value (
+) values (
 #{EMPLYR_ID},
 #{ORGNZT_ID},
 #{USER_NM},
@@ -97,7 +97,7 @@ SBSCRB_DE
 #{ESNTL_ID},
 #{CRTFC_DN_VALUE},
 now()
-)
+) 
 </insert>
 
 <update id="updateMember">
