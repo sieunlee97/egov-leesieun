@@ -47,18 +47,18 @@
                   <div class="form-group">
                   <!-- label for과 textarea id는 같게 설정 -->
                     <label for="nttCn">Content</label>
-					<textarea row="5" name="nttCn" id="nttCn" class="form-control">${result.nttCn}</textarea>
+					<textarea row="5" name="nttCn" id="nttCn" class="form-control"><c:out value="${result.nttCn}"/></textarea>
                   </div>
                   <div class="form-group">
                   	<label for="frstRegisterNm">writer</label>
-                  	<input value="${result.frstRegisterNm}" type="text" class="form-control" name="frstRegisterNm" id="frstRegisterNm" placeholder="작성자을 입력해주세요." required>
+                  	<input value="${result.frstRegisterNm}" type="text" class="form-control" name="frstRegisterNm" id="frstRegisterNm" placeholder="작성자을 입력해주세요." required />
                   	<!-- 필수 입력값은 html5에서 지원하는 유효성 검사 중 required 속성 사용해서 null값을 체크한다.(유효성검사) -->
                   </div>
                   <div class="form-group">
                   	<label for="customFile">attach</label>
                   	<div class="custom-file">
 	                  	<c:if test="${not empty result.atchFileId}">
-			                <hr>
+			                <hr><br>
 			                <strong><i class="far fa-save mr-1"></i> 첨부파일</strong>
 			                <p class="text-muted">
 			                <c:import url="/cmm/fms/selectFileInfs.do" charEncoding="utf-8">
@@ -81,7 +81,7 @@
               	<!-- a태그는 링크이동은 되지만, post값을 전송하지 못한다. 그래서 button태그를 사용. -->
               </div>
           <!-- 버튼영역 끝 -->
-         	<input type="hidden" name="pageIndex" value="<c:out value='${searchVO.pageIndex}'/>"/>
+         	<input type="hidden" name="pageIndex" value="<c:out value='${searchVO.pageIndex}'/>" />
 			<input type="hidden" name="returnUrl" value="<c:url value='/cop/bbs/forUpdateBoardArticle.do'/>"/>
 			<input type="hidden" name="bbsId" value="<c:out value='${result.bbsId}'/>" />
 			<input type="hidden" name="nttId" value="<c:out value='${result.nttId}'/>" />
@@ -96,7 +96,6 @@
 			<input type="hidden" name="password" value="dummy"> <!-- validator 처리를 위해 지정 -->
 			<input name="ntceBgnde" type="hidden" value="10000101">
 			<input name="ntceEndde" type="hidden" value="99991231">
-			<input type="hidden" name="atchFileId" value="<c:out value='${result.atchFileId}'/>" >
 			<input type="hidden" name="fileSn" value="0"> <!-- 파일순서 -->
           </form>
           <!-- 폼내부에 버튼이 있어야지만, submit버튼이 작동한다. -->
@@ -112,7 +111,7 @@
 
 <%@ include file="../include/footer.jsp" %>
 <!-- 첨부파일 부트스트랩 디자인 JS -->
-<script src="<c:url value='/'/>resources/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<script src="<c:url value='/' />resources/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <!-- 첨부파일 선택한 내용 출력 실행 -->
 <script>
 $(document).ready(function () {

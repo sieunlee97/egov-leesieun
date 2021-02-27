@@ -257,7 +257,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 			<version>1</version>
 		</dependency>
 		
-		
+		<!-- Tiles -->
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+	        <artifactId>tiles-extras</artifactId>
+	        <version>3.0.8</version>
+	    </dependency>
+	    
 	</dependencies>
 	
     <build>
