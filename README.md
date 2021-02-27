@@ -1,9 +1,9 @@
 # 전자정부표준프레임워크 커스터마이징 하기
 ### 20210226(금)
 - <수업> 
-- 첨부파일 저장한 이후 수정할 때 에러 발생하는 것 처리.
+- 첨부파일 저장한 이후 수정할 때 에러 발생하는 것 처리. AdminController의 update_board 메소드 수정.
 
-```
+```java
 BoardVO bdvo = new BoardVO();
 bdvo = bbsMngService.selectBoardArticle(boardVO);
 
@@ -14,10 +14,10 @@ return "redirect:/admin/board/view_board.do?bbsId="+bdvo.getBbsId()
 ```
 
 - 수정한 이후 리스트페이지 이동 -> 뷰페이지 이동으로 수정.
-- 기존 egov는 첨부파일을 여러번 입력 가능하기 때문에, 우리의 삭제 로직 변경.
+- 기존 egov는 첨부파일을 여러번 입력 가능하기 때문에, 우리의 삭제 로직 변경.  AdminController의 delete_board 메소드 수정.
 - > 원래 로직 (아래)
 
-```
+```java
 //실제 폴더에서 파일도 지우기(아래)
 if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") { 
 	FileVO delfileVO = fileMngService.selectFileInf(fileVO);
@@ -30,7 +30,7 @@ if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") {
 ```
 - > 수정 로직(아래)
 
-```
+```java
 //실제 폴더에서 파일도 지우기(아래:1개만 삭제하는 로직 -> 여러개 삭제하는 로직으로 변경)
 if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") {
 	List<FileVO> fileList = fileMngService.selectFileInfs(fileVO);
@@ -57,7 +57,7 @@ if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") {
 
 - **pom.xml에 의존성 추가**
 
-```
+```xml
 <!-- Tiles -->
 <dependency>
 	<groupId>org.apache.tiles</groupId>
@@ -68,7 +68,7 @@ if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") {
 
 - src/main/resources/egovframework/spring/com에 **context-tiles.xml** 설정파일 추가
 
-```
+```xml
 <!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
@@ -91,7 +91,7 @@ if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") {
 - src/main/webapp/WEB-INF/jsp에 tiles 폴더 생성.
 - src/main/webapp/WEB-INF/config/egovframework/springmvc/egov-com-servlet.xml에 빈 추가 + 로그인체크 예외항목에 추가
 
-```
+```xml
 <!-- 타일즈 jsp템플릿 리졸버 해석기 설정추가(아래) -->
 <!-- 화면처리용 JSP 파일명의  prefix, suffix 처리에 대한 타일즈 설정추가 -->
 <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"
@@ -104,7 +104,7 @@ p:order="0" p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" 
 ```
 - 로그인체크 예외항목에 추가
  
-```
+```xml
 <mvc:exclude-mapping path="/tiles/*.do"/>
 ```
 - /tiles/home.do URL 호출 -> home.tiles file호출  tiles설정이 가로챈다.(**layout.jsp파일에서** 가로챔)
