@@ -1,6 +1,119 @@
 # 전자정부표준프레임워크 커스터마이징 하기
 ### 20210226(금)
-- 타일즈 템플릿 사용
+- <수업> 
+- 첨부파일 저장한 이후 수정할 때 에러 발생하는 것 처리.
+
+```
+BoardVO bdvo = new BoardVO();
+bdvo = bbsMngService.selectBoardArticle(boardVO);
+
+return "redirect:/admin/board/view_board.do?bbsId="+bdvo.getBbsId()
++"&nttId="+bdvo.getNttId()+"&bbsTyCode="+bdvo.getBbsTyCode()
++"&bbsAttrbCode="+bdvo.getBbsAttrbCode()+"&authFlag=Y"
++"&pageIndex="+bdvo.getPageIndex();	
+```
+
+- 수정한 이후 리스트페이지 이동 -> 뷰페이지 이동으로 수정.
+- 기존 egov는 첨부파일을 여러번 입력 가능하기 때문에, 우리의 삭제 로직 변경.
+- > 원래 로직 (아래)
+
+```
+//실제 폴더에서 파일도 지우기(아래)
+if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") { 
+	FileVO delfileVO = fileMngService.selectFileInf(fileVO);
+	File target = new File(delfileVO.getFileStreCours(), delfileVO.getStreFileNm());
+	if(target.exists()) {
+		target.delete();//폴더에서 기존첨부파일 지우기
+		System.out.println("디버그 : 첨부파일 삭제OK");
+	}
+}
+```
+- > 수정 로직(아래)
+
+```
+//실제 폴더에서 파일도 지우기(아래:1개만 삭제하는 로직 -> 여러개 삭제하는 로직으로 변경)
+if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") {
+	List<FileVO> fileList = fileMngService.selectFileInfs(fileVO);
+	for(FileVO delfileVO : fileList) {
+		File target = new File(delfileVO.getFileStreCours(), delfileVO.getStreFileNm());
+		if(target.exists()) {
+			target.delete();//폴더에서 기존첨부파일 지우기
+			System.out.println("디버그 : 첨부파일 삭제OK");
+		}
+	}	
+}
+```
+- 글 작성에 관련된 insert_board.jsp 생성 + 컨트롤러 추가. CRUD 중 C 완료.
+- 관리자단 마무리. 사용자단 디자인으로 메인 + 게시판 CRUD
+- 사용자단 resources/home 폴더 생성 -> 우리 디자인 적용.
+- 기존 egov디자인 main 폴더 -> 우리 home 디자인의 메인 home폴더 변경해서 적용.
+- edu.human.come.home.web 패키지에 HomeController 생성.
+- index.jsp 파일을 수정해서 home폴더가 주 디자인으로 되도록 변경.
+- 로그아웃은 페이지 없이 처리. 따라서 HomeController만 매핑을 추가해서 처리.
+
+<템플릿 사용>
+- tiles, velocity, thymeleaf 3가지 jsp 템플릿 종류 중 **tiles 템플릿 사용**하여 home 디자인 사용
+- IT 강의 저장소 V.9.0.0 하단 자료 참고.
+
+- **pom.xml에 의존성 추가**
+
+```
+<!-- Tiles -->
+<dependency>
+	<groupId>org.apache.tiles</groupId>
+    <artifactId>tiles-extras</artifactId>
+    <version>3.0.8</version>
+</dependency>
+```
+
+- src/main/resources/egovframework/spring/com에 **context-tiles.xml** 설정파일 추가
+
+```
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+ "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+    <definition name="tiles_layout"  templateExpression="/WEB-INF/jsp/tiles/layouts/layout.jsp">
+        <put-attribute name="header" expression="/WEB-INF/jsp/tiles/layouts/header.jsp" />
+        <put-attribute name="content" expression="" />
+        <put-attribute name="footer" expression="/WEB-INF/jsp/tiles/layouts/footer.jsp" />
+    </definition>
+    <definition name="*.tiles" extends="tiles_layout">
+        <put-attribute name="content" expression="/WEB-INF/jsp/tiles/{1}.jsp" />
+    </definition>
+    <definition name="*/*.tiles" extends="tiles_layout">
+        <put-attribute name="content" expression="/WEB-INF/jsp/tiles/{1}/{2}.jsp" />
+    </definition>
+    <definition name="*/*/*.tiles" extends="tiles_layout">
+        <put-attribute name="content" expression="/WEB-INF/jsp/tiles/{1}/{2}/{3}.jsp" />
+    </definition>
+</tiles-definitions>
+```
+- src/main/webapp/WEB-INF/jsp에 tiles 폴더 생성.
+- src/main/webapp/WEB-INF/config/egovframework/springmvc/egov-com-servlet.xml에 빈 추가 + 로그인체크 예외항목에 추가
+
+```
+<!-- 타일즈 jsp템플릿 리졸버 해석기 설정추가(아래) -->
+<!-- 화면처리용 JSP 파일명의  prefix, suffix 처리에 대한 타일즈 설정추가 -->
+<bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver"
+p:order="0" p:viewClass="org.springframework.web.servlet.view.tiles3.TilesView" />
+<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer" >
+	<property name="definitions">
+		<value>classpath*:egovframework/spring/com/context-tiles.xml</value>
+	</property>
+</bean>
+```
+- 로그인체크 예외항목에 추가
+ 
+```
+<mvc:exclude-mapping path="/tiles/*.do"/>
+```
+- /tiles/home.do URL 호출 -> home.tiles file호출  tiles설정이 가로챈다.(**layout.jsp파일에서** 가로챔)
+- /WEB-INF/jsp/tiles/{1}.jsp 바인딩 -> content이름에 담겨서
+- /WEB-INF/jsp/tiles/layouts/layout.jsp 파일의 content이름에 나오게 된다.
+-  톰캣 실행 시, 가장 먼저 실행되는 설정 파일은 **web.xml**
+ - web.xml에서 welcome-file-first 로 시작 파일 지정. 현재는 index.jsp
+ - index.jsp에서 document.location.href로 /tiles/home.do로 이동하게끔 되어있음.
+ - 따라서, sht_webapp/ 경로 실행시 => sht_webapp/tiles/home.do 경로 실행.
 
 
 ### 20210225(목)
