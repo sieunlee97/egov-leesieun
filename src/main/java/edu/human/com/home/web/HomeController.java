@@ -7,6 +7,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 @Controller
 public class HomeController {
+	
+	@RequestMapping("/tiles/board/list_board.do")
+	public String list_board() throws Exception {
+		return "board/list_board.tiles";
+	}
+	
 	@RequestMapping("/tiles/login.do")
 	public String login() throws Exception {
 		return "login.tiles";

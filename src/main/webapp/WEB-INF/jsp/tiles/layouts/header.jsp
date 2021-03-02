@@ -57,21 +57,9 @@ $(document).ready(function() {
 				</ul>	
 				<nav>
 				<ul class="gnb clear">
-					<li><a href="/sample" class="openAll1">샘플 홈페이지</a>
-
-                        <div class="gnb_depth gnb_depth2_1">
-                            <ul class="submenu_list">
-                                <li><a href="/sample">반응형 홈페이지</a></li>
-                            </ul>
-                        </div>
+					<li><a href="/tiles/board/list_board.do?bbsId=BBSMSTR_AAAAAAAAAAAA" class="openAll1">공지사항</a>
 					</li>
-					<li><a href="board_list.html" class="openAll2">커뮤니티</a>
-				        <div class="gnb_depth gnb_depth2_2">
-                            <ul class="submenu_list">
-                                <li><a href="board_list.html">공지사항</a></li>
-                                <li><a href="board_list.html">갤러리</a></li>
-                            </ul>
-                        </div>
+					<li><a href="/tiles/board/list_board.do?bbsId=BBSMSTR_BBBBBBBBBBBB" class="openAll2">갤러리</a>
 					</li>
 				</ul>
                 </nav>
@@ -136,21 +124,8 @@ $(document).ready(function() {
 				</ul>	
 				<nav>
 				<ul class="gnb clear">
-					<li><a href="/sample" class="openAll1">샘플 홈페이지</a>
-
-                        <div class="gnb_depth gnb_depth2_1">
-                            <ul class="submenu_list">
-                                <li><a href="/sample">반응형 홈페이지</a></li>
-                            </ul>
-                        </div>
-					</li>
-					<li><a href="board_list.html" class="openAll2">커뮤니티</a>
-				        <div class="gnb_depth gnb_depth2_2">
-                            <ul class="submenu_list">
-                                <li><a href="board_list.html">공지사항</a></li>
-                                <li><a href="board_list.html">갤러리</a></li>
-                            </ul>
-                        </div>
+					<li><a href="/tiles/board/list_board.do?bbsId=BBSMSTR_AAAAAAAAAAAA" class="openAll1">공지사항</a>
+					<li><a href="/tiles/board/list_board.do?bbsId=BBSMSTR_BBBBBBBBBBBB" class="openAll2">갤러리</a>
 					</li>
 				</ul>
                 </nav>
