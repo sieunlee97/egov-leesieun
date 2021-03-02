@@ -124,8 +124,8 @@ $(document).ready(function() {
 				</ul>	
 				<nav>
 				<ul class="gnb clear">
-					<li><a href="/tiles/board/list_board.do?bbsId=BBSMSTR_AAAAAAAAAAAA" class="openAll1">공지사항</a>
-					<li><a href="/tiles/board/list_board.do?bbsId=BBSMSTR_BBBBBBBBBBBB" class="openAll2">갤러리</a>
+					<li><a href="<c:url value='/' />tiles/board/list_board.do?bbsId=BBSMSTR_AAAAAAAAAAAA" class="openAll1">공지사항</a>
+					<li><a href="<c:url value='/' />tiles/board/list_board.do?bbsId=BBSMSTR_BBBBBBBBBBBB" class="openAll2">갤러리</a>
 					</li>
 				</ul>
                 </nav>
