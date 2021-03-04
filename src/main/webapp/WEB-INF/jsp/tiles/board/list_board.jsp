@@ -1,6 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<style>
+.select {
+	margin-top:15px;
+	padding: 5px;
+	height: 35px;
+	line-height: 35px;
+	border: none;
+	border-bottom: 1px solid #ccc;
+}
+</style>
 	<!-- 메인콘텐츠영역 -->
 	<div id="container">
 		<!-- 메인상단위치표시영역 -->
@@ -19,10 +30,15 @@
 		<!-- 메인본문영역 -->
 		<div class="bodytext_area box_inner">
 			<!-- 검색폼영역 -->
-			<form id="search_form" name="search_form" action="<c:url value='/'/>tiles/board/list_board.do" class="minisrch_form">
+			<form id="search_form" name="search_form" method="get" action="<c:url value='/'/>tiles/board/list_board.do" class="minisrch_form">
 				<fieldset>
 					<legend>검색</legend>
-					<input name="searchWrd" type="text" class="tbox" title="검색어를 입력해주세요" placeholder="검색어를 입력해주세요">
+					<select name="searchCnd" class="select">
+						<option value="0" <c:out value='${searchVO.searchCnd=="0"? "selected":""}'/> >제목</option>
+						<option value="1" <c:if test="${searchVO.searchCnd=='1'}">selected</c:if>>내용</option>
+						<option value="2" <c:if test="${searchVO.searchCnd=='2'}">selected</c:if>>작성자</option>
+					</select>
+					<input value="${searchVO.searchWrd}" name="searchWrd" type="text" class="tbox" title="검색어를 입력해주세요" placeholder="검색어를 입력해주세요">
 					<button class="btn_srch">검색</button>
 				</fieldset>
 				<input type="hidden" name="bbsId" value="<c:out value='${boardVO.bbsId}'/>" />
@@ -46,66 +62,16 @@
 					</tr>
 				</thead>
 				<tbody>
+				<c:forEach items="${resultList}" var="boardVO" varStatus="cnt">
 					<tr>
-						<td>1</td>
-						<td class="tit_notice"><a href="board_view.html">이번 여름 휴가 제주 갈까? 미션 투어 (스프링경비 50만원 지원)</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
+						<td>${paginationInfo.totalRecordCount+1-((searchVO.pageIndex-1)*searchVO.pageSize+cnt.count)}</td>
+						<td class="tit_notice"><a href="#">
+							${boardVO.nttSj}
+						</a></td>
+						<td>${boardVO.inqireCo}</td>
+						<td>${boardVO.frstRegisterPnttm}</td>
 					</tr>
-					<tr>
-						<td>2</td>
-						<td class="tit_notice"><a href="board_view.html">박물관 미션 투어 응모 당첨자 발표</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td class="tit_notice"><a href="board_view.html">추석 연휴 티켓/투어 배송 및 직접 수령 안내</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
-					</tr>
-					<tr>
-						<td>4</td>
-						<td class="tit_notice"><a href="board_view.html">하롱베이 서비스 OPEN! (스프링정보, 가이드북, 가이드맵)</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
-					</tr>
-					<tr>
-						<td>5</td>
-						<td class="tit_notice"><a href="board_view.html">스프링 서비스 점검 안내 - 스프링에서 매월 실시하는 정기점검 안내</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
-					</tr>
-					<tr>
-						<td>6</td>
-						<td class="tit_notice"><a href="board_view.html">이번 여름 휴가 제주 갈까? 미션 투어 (스프링경비 50만원 지원)</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
-					</tr>
-					<tr>
-						<td>7</td>
-						<td class="tit_notice"><a href="board_view.html">박물관 미션 투어 응모 당첨자 발표</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
-					</tr>
-					<tr>
-						<td>8</td>
-						<td class="tit_notice"><a href="board_view.html">추석 연휴 티켓/투어 배송 및 직접 수령 안내</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
-					</tr>
-					<tr>
-						<td>9</td>
-						<td class="tit_notice"><a href="board_view.html">하롱베이 서비스 OPEN! (스프링정보, 가이드북, 가이드맵)</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
-					</tr>
-					<tr>
-						<td>10</td>
-						<td class="tit_notice"><a href="board_view.html">스프링 서비스 점검 안내</a> </td>
-						<td>123</td>
-						<td>2018-08-01</td>
-					</tr>
+				</c:forEach>
 				</tbody>
 			</table>
 			<!-- //게시물리스트영역 -->
