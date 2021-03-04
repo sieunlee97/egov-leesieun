@@ -2,6 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<style>
+.btn_bbs {
+border:none;
+cursor:pointer;
+}
+</style>
 	<!-- 메인콘텐츠영역 -->
 	<div id="container">
 		<!-- 메인상단위치표시영역 -->
@@ -31,20 +37,53 @@
 				</li>
 				<c:if test="${not empty result.atchFileId}">
 				<li class="bbs_title">
-					<strong> 첨부파일</strong>
-	                <p>
+					<strong> 첨부파일 : </strong>
 	                <c:import url="/cmm/fms/selectFileInfs.do" charEncoding="utf-8">
 	                    <c:param name="param_atchFileId" value="${result.atchFileId}" />
 	                </c:import>
-	                </p>
 				</li>
 				</c:if>
 			</ul>
 			<p class="btn_line txt_right">
-				<a href="board_list.html" class="btn_bbs">목록</a>
+				<button id="btn_list" type="button" class="btn_bbs">목록</button>
+				<c:if test="${LoginVO.id ne null}">
+		            <button id="btn_delete" type="button" class="btn_bbs">삭제</button>
+					<button id="btn_update" type="button" class="btn_bbs">수정</button>  
+				</c:if>          	
 			</p>
 		</div>
 		<!-- //메인본문영역 -->
 	</div>
 	<!-- //메인콘텐츠영역 -->
 	
+<form name="frm" method="post" action="<c:url value='/tiles/board/list_board.do'/>">
+<input type="hidden" name="pageIndex" value="<c:out value='${searchVO.pageIndex}'/>">
+<input type="hidden" name="bbsId" value="<c:out value='${result.bbsId}'/>" >
+<input type="hidden" name="nttId" value="<c:out value='${result.nttId}'/>" >
+<input type="hidden" name="parnts" value="<c:out value='${result.parnts}'/>" >
+<input type="hidden" name="sortOrdr" value="<c:out value='${result.sortOrdr}'/>" >
+<input type="hidden" name="replyLc" value="<c:out value='${result.replyLc}'/>" >
+<input type="hidden" name="nttSj" value="<c:out value='${result.nttSj}'/>" >
+<input type="hidden" name="atchFileId" value="<c:out value='${result.atchFileId}'/>" >
+<input type="hidden" name="fileSn" value="0"> <!-- 파일순서 -->
+
+</form>
+<script>
+$(document).ready(function(){
+	var action_form = $("form[name='frm']");
+	$("#btn_list").on("click", function(){
+		action_form.submit();
+	});
+	$("#btn_delete").on("click", function(){
+		if(confirm("정말로 삭제하시겠습니까?")){
+			action_form.attr("action", "<c:url value='/tiles/board/delete_board.do'/>");
+			action_form.submit();
+		}
+	});
+	$("#btn_update").on("click", function(){
+		//alert("준비중입니다.");
+		action_form.attr("action", "<c:url value='/tiles/board/update_board_form.do' />");
+		action_form.submit();
+	});
+});
+</script>

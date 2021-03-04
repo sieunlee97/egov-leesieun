@@ -13,6 +13,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import edu.human.com.util.CommonUtil;
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
@@ -31,8 +32,48 @@ public class HomeController {
 	private EgovPropertyService propertyService;
 	@Autowired
 	private EgovBBSManageService bbsMngService;
+	@Autowired
+	private EgovMessageSource egovMessageSource;
+	
 	@Inject
 	private CommonUtil commUtil;
+	
+	//게시물 등록 폼 화면 호출 POST
+	@RequestMapping("/tiles/board/insert_board_form.do")
+	public String insert_board_form(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
+		// 사용자권한 처리
+		if(!EgovUserDetailsHelper.isAuthenticated()) {
+			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    	return "cmm/uat/uia/EgovLoginUsr";
+		}
+
+	    LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+
+		BoardMasterVO bdMstr = new BoardMasterVO();
+
+		if (isAuthenticated) {
+
+		    BoardMasterVO vo = new BoardMasterVO();
+		    vo.setBbsId(boardVO.getBbsId());
+		    vo.setUniqId(user.getUniqId());
+
+		    bdMstr = bbsAttrbService.selectBBSMasterInf(vo);
+		    model.addAttribute("bdMstr", bdMstr);
+		}
+
+		//----------------------------
+		// 기본 BBS template 지정
+		//----------------------------
+		if (bdMstr.getTmplatCours() == null || bdMstr.getTmplatCours().equals("")) {
+		    bdMstr.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
+		}
+
+		model.addAttribute("brdMstrVO", bdMstr);
+		////-----------------------------
+		return "board/insert_board.tiles";
+	}
+	
 	
 	@RequestMapping("/tiles/board/view_board.do")
 	public String view_board(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
