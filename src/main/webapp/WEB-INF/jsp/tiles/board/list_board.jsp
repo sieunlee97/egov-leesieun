@@ -12,6 +12,12 @@
 	border: none;
 	border-bottom: 1px solid #ccc;
 }
+.btn_submit {
+	border:none;
+	background:none;
+	cursor:pointer;
+	font-size:0.95em;
+}
 </style>
 	<!-- 메인콘텐츠영역 -->
 	<div id="container">
@@ -66,9 +72,23 @@
 				<c:forEach items="${resultList}" var="boardVO" varStatus="cnt">
 					<tr>
 						<td>${paginationInfo.totalRecordCount+1-((searchVO.pageIndex-1)*searchVO.pageSize+cnt.count)}</td>
-						<td class="tit_notice"><a href="#">
-							${boardVO.nttSj}
-						</a></td>
+						<td class="tit_notice">
+						<form name="view_form" action="<c:url value='/tiles/board/view_board.do' />" method="post">
+							<!-- 답글일 경우 계단식표시 추가(아래) -->
+		                      <c:if test="${boardVO.replyLc!=0}">
+					               <c:forEach begin="0" end="${boardVO.replyLc}" step="1">
+					                    &nbsp;
+					               </c:forEach>
+					                &#8627;<!-- 화살표 특수문자 -->
+					          </c:if>
+	                      	<input type="hidden" name="bbsId" value="<c:out value='${boardVO.bbsId}'/>" />
+	                        <input type="hidden" name="nttId"  value="<c:out value="${boardVO.nttId}"/>" />
+	                        <input type="hidden" name="bbsTyCode" value="<c:out value='${brdMstrVO.bbsTyCode}'/>" />
+	                        <input type="hidden" name="bbsAttrbCode" value="<c:out value='${brdMstrVO.bbsAttrbCode}'/>" />
+	                        <input type="hidden" name="authFlag" value="<c:out value='${brdMstrVO.authFlag}'/>" />
+	                        <input name="pageIndex" type="hidden" value="<c:out value='${searchVO.pageIndex}'/>"/>
+	                        <button class="btn_submit"><c:out value="${boardVO.nttSj}" /></button>
+	                      </form></td>
 						<td>${boardVO.inqireCo}</td>
 						<td>${boardVO.frstRegisterPnttm}</td>
 					</tr>
@@ -84,19 +104,6 @@
             <!-- 페이징처리 끝 -->
 			
 			
-			
-			<!-- 페이징처리영역 -->
-			<div class="pagination">
-				<a href="javascript:;" class="firstpage  pbtn"><img src="<c:url value='/' />resources/home/img/btn_firstpage.png" alt="첫 페이지로 이동"></a>
-				<a href="javascript:;" class="prevpage  pbtn"><img src="<c:url value='/' />resources/home/img/btn_prevpage.png" alt="이전 페이지로 이동"></a>
-				<a href="javascript:;"><span class="pagenum currentpage">1</span></a>
-				<a href="javascript:;"><span class="pagenum">2</span></a>
-				<a href="javascript:;"><span class="pagenum">3</span></a>
-				<a href="javascript:;"><span class="pagenum">4</span></a>
-				<a href="javascript:;"><span class="pagenum">5</span></a>
-				<a href="javascript:;" class="nextpage  pbtn"><img src="<c:url value='/' />resources/home/img/btn_nextpage.png" alt="다음 페이지로 이동"></a>
-				<a href="javascript:;" class="lastpage  pbtn"><img src="<c:url value='/' />resources/home/img/btn_lastpage.png" alt="마지막 페이지로 이동"></a>
-			</div>
 			<!-- //페이징처리영역 -->
 			<p class="btn_line">
 				<a href="board_write.html" class="btn_baseColor">등록</a>

@@ -8,16 +8,16 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.AbstractPaginationRenderer;
 
 public class PaginationRenderer extends AbstractPaginationRenderer implements ServletContextAware{
 
-   private ServletContext servletContext;
+   private ServletContext servletContext; //get 없고 set만 있음.
    
    public PaginationRenderer() {//생성자 메서드명은 클래스명과 동일해야 함(약속)
    
    }
    
    public void initVariables(){
-	   	firstPageLabel    = "<a class=\"firstpage  pbtn\" href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">처음</a>";
+	   	firstPageLabel    = "&#160;<a class=\"firstpage  pbtn\" href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">처음</a>";
         previousPageLabel = "<a class='prevpage  pbtn' href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">이전</a>";
-        currentPageLabel  = "<a href='#'><span class=\"pagenum currentpage\">{0}</span></a>";
+        currentPageLabel  = "<a href='javascript:void(0) return false;'><span class=\"pagenum currentpage\">{0}</span></a>";
         otherPageLabel    = "<a class=\"pagenum\" href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">{2}</a>";
         nextPageLabel     = "&#160;<a class=\"nextpage  pbtn\" href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">다음</a>";
         lastPageLabel     = "<a class=\"lastpage  pbtn\" href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">끝</a>";

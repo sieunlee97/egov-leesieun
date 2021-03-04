@@ -88,14 +88,14 @@
 	                  <c:out value="${paginationInfo.totalRecordCount+1 - ((searchVO.pageIndex-1) * searchVO.pageSize + status.count)}"/>
 	                  </td>   
                       <td>
-	                      <!-- 답글일 경우 계단식표시 추가(아래) -->
+	                      <form name="view_form" action="<c:url value='/admin/board/view_board.do' />" method="post">
+	                      	 <!-- 답글일 경우 계단식표시 추가(아래) -->
 	                      <c:if test="${result.replyLc!=0}">
 				               <c:forEach begin="0" end="${result.replyLc}" step="1">
 				                    &nbsp;
 				               </c:forEach>
 				                &#8627;<!-- 화살표 특수문자 -->
 				          </c:if>
-	                      <form name="view_form" action="<c:url value='/admin/board/view_board.do' />" method="post">
 	                      	<input type="hidden" name="bbsId" value="<c:out value='${result.bbsId}'/>" />
 	                        <input type="hidden" name="nttId"  value="<c:out value="${result.nttId}"/>" />
 	                        <input type="hidden" name="bbsTyCode" value="<c:out value='${brdMstrVO.bbsTyCode}'/>" />
