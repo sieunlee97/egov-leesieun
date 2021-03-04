@@ -7,10 +7,10 @@
 		<div class="location_area customer">
 			<div class="box_inner">
 				<h2 class="tit_page">스프링 <span class="in">in</span> 자바</h2>
-				<p class="location">고객센터 <span class="path">/</span> 공지사항</p>
+				<p class="location">고객센터 <span class="path">/</span>${brdMstrVO.bbsNm}</p>
 				<ul class="page_menu clear">
-					<li><a href="#" class="on">공지사항</a></li>
-					<li><a href="#">문의하기</a></li>
+					<li><a href="<c:url value='/'/>tiles/board/list_board.do?bbsId=BBSMSTR_AAAAAAAAAAAA" class="<c:out value='${brdMstrVO.bbsId=="BBSMSTR_AAAAAAAAAAAA"? "on":""}'/>">공지사항</a></li>
+					<li><a href="<c:url value='/'/>tiles/board/list_board.do?bbsId=BBSMSTR_BBBBBBBBBBBB" class="<c:out value='${brdMstrVO.bbsId=="BBSMSTR_BBBBBBBBBBBB"? "on":"" }'/>">갤러리</a></li>
 				</ul>
 			</div>
 		</div>	
@@ -19,12 +19,18 @@
 		<!-- 메인본문영역 -->
 		<div class="bodytext_area box_inner">
 			<!-- 검색폼영역 -->
-			<form id="search_form" name="search_form" action="board_list.html" class="minisrch_form">
+			<form id="search_form" name="search_form" action="<c:url value='/'/>tiles/board/list_board.do" class="minisrch_form">
 				<fieldset>
 					<legend>검색</legend>
-					<input name="search_keyword" type="text" class="tbox" title="검색어를 입력해주세요" placeholder="검색어를 입력해주세요">
+					<input name="searchWrd" type="text" class="tbox" title="검색어를 입력해주세요" placeholder="검색어를 입력해주세요">
 					<button class="btn_srch">검색</button>
 				</fieldset>
+				<input type="hidden" name="bbsId" value="<c:out value='${boardVO.bbsId}'/>" />
+				<input type="hidden" name="nttId"  value="0" />
+				<input type="hidden" name="bbsTyCode" value="<c:out value='${brdMstrVO.bbsTyCode}'/>" />
+				<input type="hidden" name="bbsAttrbCode" value="<c:out value='${brdMstrVO.bbsAttrbCode}'/>" />
+				<input type="hidden" name="authFlag" value="<c:out value='${brdMstrVO.authFlag}'/>" />
+				<input name="pageIndex" type="hidden" value="<c:out value='${searchVO.pageIndex}'/>"/> 
 			</form>
 			<!-- //검색폼영역 -->
 			
