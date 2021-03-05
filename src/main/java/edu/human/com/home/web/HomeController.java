@@ -1,5 +1,7 @@
 package edu.human.com.home.web;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -7,15 +9,27 @@ import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springmodules.validation.commons.DefaultBeanValidator;
 
+import edu.human.com.board.service.BoardService;
 import edu.human.com.util.CommonUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.let.cop.bbs.service.Board;
+import egovframework.let.cop.bbs.service.BoardMaster;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
@@ -34,9 +48,225 @@ public class HomeController {
 	private EgovBBSManageService bbsMngService;
 	@Autowired
 	private EgovMessageSource egovMessageSource;
+	@Autowired
+	private DefaultBeanValidator beanValidator;
+	@Autowired
+	private EgovFileMngUtil fileUtil;
+	@Autowired
+	private EgovFileMngService fileMngService; 
 	
 	@Inject
 	private CommonUtil commUtil;
+	@Inject
+	private BoardService boardService;
+	
+	@RequestMapping("/tiles/board/update_board.do")	
+	public String update_board(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
+		    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, ModelMap model,
+		    SessionStatus status, RedirectAttributes rdat) throws Exception {
+
+	    	// 사용자권한 처리
+	    	if(!EgovUserDetailsHelper.isAuthenticated()) {
+	    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	        	return "login.tiles";
+	    	}
+
+		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+
+		String atchFileId = boardVO.getAtchFileId();
+
+		beanValidator.validate(board, bindingResult);
+		if (bindingResult.hasErrors()) {
+
+		    boardVO.setFrstRegisterId(user.getUniqId());
+
+		    BoardMaster master = new BoardMaster();
+		    BoardMasterVO bmvo = new BoardMasterVO();
+		    BoardVO bdvo = new BoardVO();
+
+		    master.setBbsId(boardVO.getBbsId());
+		    master.setUniqId(user.getUniqId());
+
+		    bmvo = bbsAttrbService.selectBBSMasterInf(master);
+		    bdvo = bbsMngService.selectBoardArticle(boardVO);
+
+		    model.addAttribute("result", bdvo);
+		    model.addAttribute("bdMstr", bmvo);
+
+		    return "board/update_board.tiles";
+		}
+
+		if (isAuthenticated) {
+		    final Map<String, MultipartFile> files = multiRequest.getFileMap();
+		    if (!files.isEmpty()) {
+				if ("".equals(atchFileId)) {  // 기존 첨부파일이 존재하지 않으면 신규등록
+					System.out.println("디버그1"+atchFileId);
+				    List<FileVO> result = fileUtil.parseFileInf(files, "BBS_", 0, atchFileId, "");
+				    atchFileId = fileMngService.insertFileInfs(result);
+				    board.setAtchFileId(atchFileId);
+				} else { // 기존 첨부파일이 존재하면
+					System.out.println("디버그) 파일ID : "+atchFileId);
+				    FileVO fvo = new FileVO();
+				    fvo.setAtchFileId(atchFileId);
+				    int cnt = fileMngService.getMaxFileSN(fvo);
+				    List<FileVO> _result = fileUtil.parseFileInf(files, "BBS_", cnt, atchFileId, "");
+				    fileMngService.updateFileInfs(_result);
+				}
+		    }
+
+		    board.setLastUpdusrId(user.getUniqId());
+
+		    board.setNtcrNm("");	// dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		    board.setPassword("");	// dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		    //게시물 업데이트 레코드 처리(아래)
+		    bbsMngService.updateBoardArticle(board);
+		}
+			BoardVO bdvo = new BoardVO();
+		    bdvo = bbsMngService.selectBoardArticle(boardVO);
+		    rdat.addFlashAttribute("msg", "수정");
+		    
+		    return "redirect:/tiles/board/view_board.do?bbsId="+bdvo.getBbsId()
+			+"&nttId="+bdvo.getNttId()+"&bbsTyCode="+bdvo.getBbsTyCode()
+			+"&bbsAttrbCode="+bdvo.getBbsAttrbCode()+"&authFlag=Y"
+			+"&pageIndex="+bdvo.getPageIndex();	
+
+		//return "redirect:/admin/board/list_board.do?bbsId="+board.getBbsId();
+	}
+	
+	@RequestMapping("/tiles/board/update_board_form.do")
+	public String update_board_form (@ModelAttribute("searchVO") BoardVO boardVO, @ModelAttribute("board") BoardVO vo, ModelMap model)
+		    throws Exception {
+
+		// 로그인 체크 (비로그인시, 로그인 페이지로 이동)
+		if(!boardVO.getBbsId().equals("BBSMSTR_BBBBBBBBBBBB") && !EgovUserDetailsHelper.isAuthenticated()) {
+			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    	return "login.tiles";
+		}
+
+		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+
+		boardVO.setFrstRegisterId(user.getUniqId());
+
+		BoardMaster master = new BoardMaster();
+		BoardMasterVO bmvo = new BoardMasterVO();
+		BoardVO bdvo = new BoardVO();
+
+		vo.setBbsId(boardVO.getBbsId());
+
+		master.setBbsId(boardVO.getBbsId());
+		master.setUniqId(user.getUniqId());
+
+		if (isAuthenticated) {
+		    bmvo = bbsAttrbService.selectBBSMasterInf(master);
+		    bdvo = bbsMngService.selectBoardArticle(boardVO);
+		}
+
+		model.addAttribute("result", bdvo); //게시물 정보가 담긴 오브젝트(게시물제목, 내용, 첨부파일id,...)
+		model.addAttribute("bdMstr", bmvo); //게시판 정보가 담긴 오브젝트(게시판명, 게시판id,...)
+
+		//----------------------------
+		// 기본 BBS template 지정 게시판ID별로 필요한 디자인 css파일 변경시켜준다.
+		//----------------------------
+		if (bmvo.getTmplatCours() == null || bmvo.getTmplatCours().equals("")) {
+		    bmvo.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
+		}
+		model.addAttribute("brdMstrVO", bmvo); //위에서 정의된 bdMstr 모델과 같음. 두명 이상이 만들어서
+		////-----------------------------
+		return "board/update_board.tiles";
+	}
+	
+	@RequestMapping("/tiles/board/delete_board.do")
+	public String delete_board(FileVO fileVO, BoardVO boardVO, RedirectAttributes rdat) throws Exception {
+		if(boardVO.getAtchFileId() != null && !"".equals(boardVO.getAtchFileId())) {
+			System.out.println("디버그) 첨부파일 ID : "+boardVO.getAtchFileId());
+			//fileVO.setAtchFileId(boardVO.getAtchFileId());
+			//fileMngService.deleteAllFileInf(fileVO); //USE_AT='N', 삭제X
+			//물리파일 지우려면 2가지 값 필수 : file_stre_cours, stre_file_nm
+			
+			//실제 폴더에서 파일도 지우기(아래:1개만 삭제하는 로직 -> 여러개 삭제하는 로직으로 변경)
+			if(fileVO.getAtchFileId() != null && fileVO.getAtchFileId() !="") {
+				List<FileVO> fileList = fileMngService.selectFileInfs(fileVO);
+				for(FileVO delfileVO : fileList) {
+					File target = new File(delfileVO.getFileStreCours(), delfileVO.getStreFileNm());
+					if(target.exists()) {
+						target.delete();//폴더에서 기존첨부파일 지우기
+						System.out.println("디버그 : 첨부파일 삭제OK");
+					}
+				}	
+			}
+			//첨부파일 레코드 삭제(아래)
+			boardService.delete_attach(boardVO.getAtchFileId());
+		}
+		//게시물 삭제(아래)
+		boardService.delete_board((int)boardVO.getNttId());
+		
+		rdat.addFlashAttribute("msg", "삭제");
+		return "redirect:/tiles/board/list_board.do?bbsId="+boardVO.getBbsId();
+	}
+	
+	@RequestMapping("/tiles/board/insert_board.do")
+	public String insert_board(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
+		    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, SessionStatus status,
+		    ModelMap model) throws Exception {
+		// 사용자권한 처리
+		if(!EgovUserDetailsHelper.isAuthenticated()) {
+			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    	return "login.tiles";
+		}
+
+		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+
+		beanValidator.validate(board, bindingResult);
+		if (bindingResult.hasErrors()) { //전송값이 문자인데 필드값은 날짜일 때 바인딩 에러 발생. 이때 if문 실행
+			System.out.println("디버그"+board.toString());
+		    BoardMasterVO master = new BoardMasterVO();
+		    BoardMasterVO vo = new BoardMasterVO();
+
+		    vo.setBbsId(boardVO.getBbsId());
+		    vo.setUniqId(user.getUniqId());
+
+		    master = bbsAttrbService.selectBBSMasterInf(vo);
+
+		    model.addAttribute("bdMstr", master);
+
+		    //----------------------------
+		    // 기본 BBS template 지정
+		    //----------------------------
+		    if (master.getTmplatCours() == null || master.getTmplatCours().equals("")) {
+			master.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
+		    }
+
+		    model.addAttribute("brdMstrVO", master);
+		    ////-----------------------------
+
+		    return "board/insert_board.tiles";
+		}
+
+		if (isAuthenticated) {
+		    List<FileVO> result = null;
+		    String atchFileId = "";
+
+		    final Map<String, MultipartFile> files = multiRequest.getFileMap();
+		    if (!files.isEmpty()) {
+			result = fileUtil.parseFileInf(files, "BBS_", 0, "", "");
+			atchFileId = fileMngService.insertFileInfs(result);
+		    }
+		    board.setAtchFileId(atchFileId);
+		    board.setFrstRegisterId(user.getUniqId());
+		    board.setBbsId(board.getBbsId());
+
+		    board.setNtcrNm("");	// dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		    board.setPassword("");	// dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		    //board.setNttCn(unscript(board.getNttCn()));	// XSS 방지
+
+		    bbsMngService.insertBoardArticle(board);
+		}
+		
+		return "redirect:/tiles/board/list_board.do?bbsId="+board.getBbsId();
+	}
 	
 	//게시물 등록 폼 화면 호출 POST
 	@RequestMapping("/tiles/board/insert_board_form.do")
@@ -44,7 +274,7 @@ public class HomeController {
 		// 사용자권한 처리
 		if(!EgovUserDetailsHelper.isAuthenticated()) {
 			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-	    	return "cmm/uat/uia/EgovLoginUsr";
+	    	return "login.tiles";
 		}
 
 	    LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
