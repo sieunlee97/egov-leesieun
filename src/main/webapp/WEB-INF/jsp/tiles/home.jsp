@@ -50,27 +50,20 @@
 	
 		<!-- 갤러리최근게시물영역 -->
 		<div class="about_area">
-			<h2>갤러리 최근 게시물 <b>TOP 3</b></h2>
+			<h2>
+			<a href="<c:url value='/'/>tiles/board/list_board.do?bbsId=BBSMSTR_BBBBBBBBBBBB">갤러리 최근 게시물 </a><b>TOP 3</b></h2>
 			<div class="about_box">
 				<ul class="place_list box_inner clear">
-					<li><a href="#" onclick="$('.popup_base').css('height',$(document).height());$('.contact_pop').show();">
+					<c:forEach items="${galleryList}" var="galleryVO">
+						<li>
+						<a href="#">
 							<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" />
-							<h3>OOOO OOOOO</h3>
-							<p class="txt">OOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOO!</p>
-							<span class="view">VIEW</span></a>
-					</li>
-					<li><a href="#" onclick="$('.popup_base').css('height',$(document).height());$('.space_pop').show();">
-							<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" />
-							<h3>OOOO OOOOO</h3>
-							<p class="txt">OOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOO.</p>
-							<span class="view">VIEW</span></a>
-					</li>
-					<li><a href="#" onclick="$('.popup_base').css('height',$(document).height());$('.program_pop').show();">
-							<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" />
-							<h3>OOOO OOOOO</h3>
-							<p class="txt">OOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOOOOOO OOOOO</p>
-							<span class="view">VIEW</span></a>
-					</li>
+							<h3>${galleryVO.nttSj}</h3>
+							<p class="txt">${galleryVO.nttCn}</p>
+							<span class="view">VIEW</span>
+						</a>
+						</li>
+					</c:forEach>
 				</ul>
 			</div>
 		</div>
@@ -85,13 +78,11 @@
 					<a href="javascript:;">전화 상담 신청</a>
 				</p>
 				<div class="bbs_line">
-					<h3>NOTICE</h3>
+					<h3><a href="<c:url value='/' />tiles/board/list_board.do?bbsId=BBSMSTR_AAAAAAAAAAAA">NOTICE</a></h3>
 					<ul class="notice_recent">
-						<li><a href="javascript:;">OOOO OOOOO (스프링OOOO OOOOO)</a></li>
-						<li><a href="javascript:;">OOOO OOOOOOOOO OOOOO</a></li>
-						<li><a href="javascript:;">OOOO OOOOO/OOOO OOOOO</a></li>
-						<li><a href="javascript:;">OOOO OOOOO OPEN! (스프링정보, OOOO OOOOO)</a></li>
-						<li><a href="javascript:;">OOOO OOOOO 서비스 점검 안내</a></li>
+					<c:forEach items="${noticeList}" var="noticeVO">
+						<li><a href="javascript:;">${noticeVO.nttSj}</a></li>
+					</c:forEach>
 					</ul>
 				</div>
 			</div>
