@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <style>
 .view_detail img {
 	opacity:0.8;
@@ -71,7 +71,11 @@
 									<img class="img_topplace" src="<c:url value='/' />tiles/board/previewImage.do?atchFileId=${galleryVO.atchFileId}" />
 								</c:if>
 								<h3>${galleryVO.nttSj}</h3>
-								<p class="txt">${galleryVO.nttCn}</p>
+								<p class="txt">
+								<!--<c:out value="${galleryVO.nttCn.replaceAll('\\\<.*?\\\>','')}" />-->
+								<!-- 콘텐츠 내용이 길 때 -->
+								<c:out value="${fn:substring(galleryVO.nttCn.replaceAll('\\\<.*?\\\>',''),0,40)}" />
+								</p>
 								<span class="view">VIEW</span>
 								<input type="hidden" name="bbsId" value="<c:out value='${galleryVO.bbsId}'/>" />
 		                        <input type="hidden" name="nttId"  value="<c:out value="${galleryVO.nttId}"/>" />
@@ -99,7 +103,17 @@
 					<h3><a href="<c:url value='/' />tiles/board/list_board.do?bbsId=BBSMSTR_AAAAAAAAAAAA">NOTICE</a></h3>
 					<ul class="notice_recent">
 					<c:forEach items="${noticeList}" var="noticeVO">
-						<li><a href="javascript:;">${noticeVO.nttSj}</a></li>
+						<li class="view_detail" style="cursor:pointer;">
+						<form name="view_form" action="<c:url value='/tiles/board/view_board.do' />" method="post">
+						<c:out value="${fn:substring(noticeVO.nttSj.replaceAll('\\\<.*?\\\>',''),0,20)}" />					
+								<input type="hidden" name="bbsId" value="<c:out value='${noticeVO.bbsId}'/>" />
+		                        <input type="hidden" name="nttId"  value="<c:out value="${noticeVO.nttId}"/>" />
+		                        <input type="hidden" name="bbsTyCode" value="<c:out value='${brdMstrVO.bbsTyCode}'/>" />
+		                        <input type="hidden" name="bbsAttrbCode" value="<c:out value='${brdMstrVO.bbsAttrbCode}'/>" />
+		                        <input type="hidden" name="authFlag" value="<c:out value='Y'/>" />
+		                        <input name="pageIndex" type="hidden" value="<c:out value='1'/>"/>
+						</form>
+						</li>
 					</c:forEach>
 					</ul>
 				</div>

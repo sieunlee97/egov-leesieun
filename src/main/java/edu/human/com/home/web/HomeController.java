@@ -88,9 +88,9 @@ public class HomeController {
 		if(boolCheck == false) { //첨부파일이 이미지가 아니라면,
 			System.out.println("디버그 :"+ fileVO.getFileExtsn().toLowerCase());
 			//위에서 구한 첨부파일 저장위치, 저장파일명을 가지고 화면에 출력-스트림(아래)
-			String path = request.getSession().getServletContext().getRealPath("/resources/home/img");
+			String path = request.getSession().getServletContext().getRealPath("/resources/home/img/no_image.png");
 			System.out.println("디버그 path2: " + path);
-			file = new File(path+"/no_image.png");
+			file = new File(path);
 		} else {
 			file = new File(fileVO.getFileStreCours(), fileVO.getStreFileNm());
 		}
