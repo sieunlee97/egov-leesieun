@@ -4,10 +4,12 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +70,7 @@ public class HomeController {
 	
 	//갤러리 최근 게시물 미리보기 처리
 	@RequestMapping("/tiles/board/previewImage.do")
-	public void previewImage(HttpServletResponse response, @RequestParam("atchFileId") String atchFileId) throws Exception {
+	public void previewImage(HttpServletRequest request, HttpServletResponse response, @RequestParam("atchFileId") String atchFileId) throws Exception {
 		FileVO fileVO = new FileVO();
 		fileVO.setAtchFileId(atchFileId);
 		for(int cnt=0; cnt<3; cnt++) {
@@ -78,8 +80,21 @@ public class HomeController {
 				break;
 			}
 		}
-		//위에서 구한 첨부파일 저장위치, 저장파일명을 가지고 화면에 출력-스트림(아래)
-		File file = new File(fileVO.getFileStreCours(),fileVO.getStreFileNm());
+		
+		File file = null;
+		//첨부파일 확장자가 이미지가 아닐 때, 액박이미지 대신 대체 이미지 지정(아래)
+		String[] imgCheck = {"jpg", "jpeg", "gif", "png", "bmp"};
+		boolean boolCheck = Arrays.asList(imgCheck).contains(fileVO.getFileExtsn().toLowerCase());
+		if(boolCheck == false) { //첨부파일이 이미지가 아니라면,
+			System.out.println("디버그 :"+ fileVO.getFileExtsn().toLowerCase());
+			//위에서 구한 첨부파일 저장위치, 저장파일명을 가지고 화면에 출력-스트림(아래)
+			String path = request.getSession().getServletContext().getRealPath("/resources/home/img");
+			System.out.println("디버그 path2: " + path);
+			file = new File(path+"/no_image.png");
+		} else {
+			file = new File(fileVO.getFileStreCours(), fileVO.getStreFileNm());
+		}
+		
 		//스트리밍에 필요한 클래스 변수 생성(아래 3가지)
 		FileInputStream fis = new FileInputStream(file); //저장된 파일을 스트림클래스를 이용해서 읽어들임
 		BufferedInputStream bis = new BufferedInputStream(fis); //중간저장소 : 내용 날아가지 않도록. fis인풋스트림(필수값)을 받아서 버퍼에 저장

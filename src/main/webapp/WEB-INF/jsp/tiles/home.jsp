@@ -2,7 +2,14 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-	
+<style>
+.view_detail img {
+	opacity:0.8;
+}
+.view_detail img:hover {
+	opacity:1;
+}
+</style>
 	<!-- 메인콘텐츠영역 -->
 	<div id="container">
 		<!-- 모바일+PC 공통슬라이드영역 -->
@@ -58,10 +65,10 @@
 						<li class="view_detail" style="cursor:pointer;">
 							<form name="view_form" action="<c:url value='/tiles/board/view_board.do' />" method="post">
 								<c:if test="${empty galleryVO.atchFileId}">
-								<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" />
+									<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="이미지가 없습니다." />
 								</c:if>
 								<c:if test="${not empty galleryVO.atchFileId}">
-									<img class="img_topplacec" src="<c:url value='/' />tiles/board/previewImage.do?atchFileId=${galleryVO.atchFileId}" style="opacity:0.7;" />
+									<img class="img_topplace" src="<c:url value='/' />tiles/board/previewImage.do?atchFileId=${galleryVO.atchFileId}" />
 								</c:if>
 								<h3>${galleryVO.nttSj}</h3>
 								<p class="txt">${galleryVO.nttCn}</p>
@@ -102,12 +109,12 @@
 	</div>
 	<!-- //메인콘텐츠영역 -->
 	
-	<script>
-	$(document).ready(function(){
-		$(".view_detail").on("click", function(){
-			var select_element = $(this).find("form");
-			select_element.submit(); 
-		});
+<script>
+$(document).ready(function(){
+	$(".view_detail").on("click", function(){
+		var select_element = $(this).find("form");
+		select_element.submit(); 
 	});
-	</script>
+});
+</script>
 	
