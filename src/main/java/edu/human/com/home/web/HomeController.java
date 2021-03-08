@@ -1,10 +1,14 @@
 package edu.human.com.home.web;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -54,11 +59,55 @@ public class HomeController {
 	private EgovFileMngUtil fileUtil;
 	@Autowired
 	private EgovFileMngService fileMngService; 
+
 	
 	@Inject
 	private CommonUtil commUtil;
 	@Inject
 	private BoardService boardService;
+	
+	//갤러리 최근 게시물 미리보기 처리
+	@RequestMapping("/tiles/board/previewImage.do")
+	public void previewImage(HttpServletResponse response, @RequestParam("atchFileId") String atchFileId) throws Exception {
+		FileVO fileVO = new FileVO();
+		fileVO.setAtchFileId(atchFileId);
+		for(int cnt=0; cnt<3; cnt++) {
+			fileVO.setFileSn(Integer.toString(cnt));
+			fileVO = fileMngService.selectFileInf(fileVO);
+			if(fileVO != null) {
+				break;
+			}
+		}
+		//위에서 구한 첨부파일 저장위치, 저장파일명을 가지고 화면에 출력-스트림(아래)
+		File file = new File(fileVO.getFileStreCours(),fileVO.getStreFileNm());
+		//스트리밍에 필요한 클래스 변수 생성(아래 3가지)
+		FileInputStream fis = new FileInputStream(file); //저장된 파일을 스트림클래스를 이용해서 읽어들임
+		BufferedInputStream bis = new BufferedInputStream(fis); //중간저장소 : 내용 날아가지 않도록. fis인풋스트림(필수값)을 받아서 버퍼에 저장
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		int imgByte; // while 반복문의 반복조건에 사용될 변수
+		while((imgByte=bis.read()) != -1) {
+			baos.write(imgByte);
+		}
+//===================여기까지가 baos객체(출력버퍼)에 이미지 내용을 임시저장한 상태(위)===========================
+		
+		String type=""; //type변수 초기화
+		if( fileVO.getFileExtsn() != null && !"".equals(fileVO.getFileExtsn()) ){
+			// 첨부파일 확장이름이 존재할 때, 이미지 파일을 체크한다.(아래)
+			if("jpg".equals(fileVO.getFileExtsn().toLowerCase())) {
+				type="image/jpeg"; //jpg != jpeg 이름이 달라서 조건 필요
+			} else {
+				type="imge/"+fileVO.getFileExtsn().toLowerCase();
+			}
+		}
+		//브라우저에서 출력하는 response 응답코드(아래)
+		response.setHeader("Content-Type", type);
+		response.setContentLength(baos.size());
+		baos.writeTo(response.getOutputStream()); //실제 출력 전송
+		response.getOutputStream().flush(); //실제 화면에 출력
+		response.getOutputStream().close(); //응답객체 종료 ( 메모리 날리기)
+
+	}
 	
 	@RequestMapping("/tiles/board/update_board.do")	
 	public String update_board(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
