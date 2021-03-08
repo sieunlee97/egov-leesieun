@@ -55,13 +55,19 @@
 			<div class="about_box">
 				<ul class="place_list box_inner clear">
 					<c:forEach items="${galleryList}" var="galleryVO">
-						<li>
-						<a href="#">
-							<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" />
-							<h3>${galleryVO.nttSj}</h3>
-							<p class="txt">${galleryVO.nttCn}</p>
-							<span class="view">VIEW</span>
-						</a>
+						<li class="view_detail" style="cursor:pointer;">
+							<form name="view_form" action="<c:url value='/tiles/board/view_board.do' />" method="post">
+								<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" />
+								<h3>${galleryVO.nttSj}</h3>
+								<p class="txt">${galleryVO.nttCn}</p>
+								<span class="view">VIEW</span>
+								<input type="hidden" name="bbsId" value="<c:out value='${galleryVO.bbsId}'/>" />
+		                        <input type="hidden" name="nttId"  value="<c:out value="${galleryVO.nttId}"/>" />
+		                        <input type="hidden" name="bbsTyCode" value="<c:out value='${galleryVO.bbsTyCode}'/>" />
+		                        <input type="hidden" name="bbsAttrbCode" value="<c:out value='${galleryVO.bbsAttrbCode}'/>" />
+		                        <input type="hidden" name="authFlag" value="<c:out value='Y'/>" />
+		                        <input name="pageIndex" type="hidden" value="<c:out value='1'/>"/>
+							</form>
 						</li>
 					</c:forEach>
 				</ul>
@@ -91,4 +97,13 @@
 	</div>
 	<!-- //메인콘텐츠영역 -->
 	
+	<script>
+	$(document).ready(function(){
+		$(".view_detail").on("click", function(){
+			var select_element = $(this).find("form");
+			select_element.submit(); 
+		});
+	});
+	
+	</script>
 	

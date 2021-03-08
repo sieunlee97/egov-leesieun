@@ -65,7 +65,7 @@
 					</ul>
 					<p class="btn_line">
 					<button type="submit" class="btn_baseColor">등록</button>
-					<button type="button" id="btn_list" class="btn_baseColor">목록</a>
+					<button type="button" id="btn_list" class="btn_baseColor">목록</button>
 					</p>	
 				</fieldset>
 				<input name="pageIndex" type="hidden" value="<c:out value='${searchVO.pageIndex}'/>"/>
@@ -97,8 +97,8 @@
 	$(document).ready(function(){
 		var select_element = $("form[name='form_insert']");
 		$("#btn_list").on("click", function(){
-			form_element.attr("action", "<c:url value='/'/>tiles/board/list_boiard.do");
-			form_element.submit();
+			select_element.attr("action", "<c:url value='/' />tiles/board/list_board.do");
+			select_element.submit();
 		});
 		
 	});
