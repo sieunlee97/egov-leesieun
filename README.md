@@ -3,10 +3,33 @@
 
 ### 20210309(화)
 - <작업예정>
-- 사용자단(관리자단) 페이징 처리 확인 예정.
-- AVD에 헬로우월드 앱 1개 생성해서 배포 예정.
+- [X] 사용자단(관리자단) 페이징 처리 확인 예정.
+- [X] AVD에 헬로우월드 앱 1개 생성해서 배포 예정.
 - 애플리케이션 설계 과목 진도.
 - 안드로이드 스튜디오 4.1.2 최신버전 학습 -PPT슬라이드 교재.
+
+----------------------------------------------------------------
+
+<수업>
+
+- 페이징 처리 jsFunction 없어서 오류 발생 (jsFunction="fn_egov_select_noticeList" 필요)
+- list_borad.jsp에 스크립트 추가.
+
+```jsp
+<script>
+function fn_egov_select_noticeList(pageNo) {
+    document.search_form.pageIndex.value = pageNo;
+    document.search_form.submit();  
+}
+</script>
+```
+
+- <안드로이드 스튜디오>
+- 안드로이드앱은 액티비티(xml 화면) - 프로그램(java파일) 한 쌍으로 구성.
+- 웹에서 사용하는 크기 단위 : px(pixel)로 통일. 확대시 깨짐
+- 앱에서 사용하는 크기 단위 : sp(scale-independent pixel). 확장가능 픽셀, 문자전용크기
+- 한글 깨지는 문제 발생! 갤럭시AVD 한글은 현재 롤리팝 5.1부터 지원.
+- > System Image : 기존에 다운로드했던 JellyBean 삭제, Lollipop 다운로드
 
 ### 20210308(월)
 - <작업예정>
