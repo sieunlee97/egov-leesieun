@@ -24,9 +24,13 @@
 
 </style>
 <script>
-$(document).ready(function() {
-	
-});
+if("${msg}" != ''){
+	if("${msg}" == '삭제'){
+		alert("${msg}가 완료되었습니다.");
+	} else {
+		alert("${msg}이 완료되었습니다.");
+	}
+}
 </script>
 </head>
 <body>

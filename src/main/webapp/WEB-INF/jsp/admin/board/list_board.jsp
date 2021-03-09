@@ -153,3 +153,9 @@ $(document).ready(function(){
 	});
 });
 </script>
+<script>
+function fn_egov_select_noticeList(pageNo) {
+    document.search_form.pageIndex.value = pageNo;
+    document.search_form.submit();  
+}
+</script>

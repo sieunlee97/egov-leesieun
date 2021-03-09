@@ -108,12 +108,12 @@
 	$(document).ready(function(){
 		var select_element = $("form[name='form_update']");
 		$("#btn_view").on("click",function(){
-			form_element.attr("action", "<c:url value='/'/>tiles/board/view_board.do");
-			form_element.submit();
+			select_element.attr("action", "<c:url value='/'/>tiles/board/view_board.do");
+			select_element.submit();
 		});
 		$("#btn_list").on("click", function(){
-			form_element.attr("action", "<c:url value='/'/>tiles/board/list_board.do");
-			form_element.submit();
+			select_element.attr("action", "<c:url value='/'/>tiles/board/list_board.do");
+			select_element.submit();
 		});
 		
 	});

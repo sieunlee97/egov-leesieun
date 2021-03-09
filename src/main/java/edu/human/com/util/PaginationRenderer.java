@@ -18,7 +18,7 @@ public class PaginationRenderer extends AbstractPaginationRenderer implements Se
 	   	firstPageLabel    = "&#160;<a class=\"firstpage  pbtn\" href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">처음</a>";
         previousPageLabel = "<a class='prevpage  pbtn' href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">이전</a>";
         currentPageLabel  = "<a href='javascript:void(0) return false;'><span class=\"pagenum currentpage\">{0}</span></a>";
-        otherPageLabel    = "<a class=\"pagenum\" href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">{2}</a>";
+        otherPageLabel    = "<a href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \"><sapn class=\"pagenum\">{2}</span></a>";
         nextPageLabel     = "&#160;<a class=\"nextpage  pbtn\" href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">다음</a>";
         lastPageLabel     = "<a class=\"lastpage  pbtn\" href=\"?pageIndex={1}\" onclick=\"{0}({1});return false; \">끝</a>";
    }

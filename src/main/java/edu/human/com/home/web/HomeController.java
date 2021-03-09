@@ -273,7 +273,7 @@ public class HomeController {
 	@RequestMapping("/tiles/board/insert_board.do")
 	public String insert_board(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
 		    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, SessionStatus status,
-		    ModelMap model) throws Exception {
+		    ModelMap model, RedirectAttributes rdat) throws Exception {
 		// 사용자권한 처리
 		if(!EgovUserDetailsHelper.isAuthenticated()) {
 			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
@@ -329,6 +329,7 @@ public class HomeController {
 		    bbsMngService.insertBoardArticle(board);
 		}
 		
+		rdat.addFlashAttribute("msg", "등록");
 		return "redirect:/tiles/board/list_board.do?bbsId="+board.getBbsId();
 	}
 	
