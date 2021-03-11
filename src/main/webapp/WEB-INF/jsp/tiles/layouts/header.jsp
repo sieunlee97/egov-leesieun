@@ -51,7 +51,7 @@ if("${msg}" != ''){
 					<li><a href="<c:url value='/'/>cmm/main/mainPage.do">OLD전자정부사이트</a></li>
 					<c:if test="${LoginVO.id eq null || LoginVO.id eq ''}">
 						<li><a href="<c:url value='/' />tiles/login.do">로그인</a></li>
-						<li><a href="join.html">회원가입</a></li>
+						<li><a href="<c:url value='/' />tiles/join.do">회원가입</a></li>
 					</c:if>
 					<!-- 로그인 후 보이는 메뉴(아래) -->
 					<c:if test="${LoginVO.id ne null}">

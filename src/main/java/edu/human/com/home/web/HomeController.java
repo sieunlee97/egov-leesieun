@@ -68,6 +68,11 @@ public class HomeController {
 	@Inject
 	private BoardService boardService;
 	
+	@RequestMapping("/tiles/join.do")
+	public String join() throws Exception {
+		return "join.tiles";
+	}
+	
 	//갤러리 최근 게시물 미리보기 처리
 	@RequestMapping("/tiles/board/previewImage.do")
 	public void previewImage(HttpServletRequest request, HttpServletResponse response, @RequestParam("atchFileId") String atchFileId) throws Exception {
