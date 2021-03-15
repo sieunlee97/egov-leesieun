@@ -72,10 +72,10 @@ public class AdminController {
 	public String insert_board(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
 		    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, SessionStatus status,
 		    ModelMap model) throws Exception {
-		// 사용자권한 처리
-		if(!EgovUserDetailsHelper.isAuthenticated()) {
-			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-	    	return "cmm/uat/uia/EgovLoginUsr";
+		// 사용자권한 처리 new
+		if(!commUtil.getAuthorities()) {
+			model.addAttribute("msg", "관리자그룹만 접근 가능합니다.\\n사용자 홈페이지로 이동");
+	    	return "home.tiles";
 		}
 
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
@@ -133,10 +133,10 @@ public class AdminController {
 	//게시물 등록 폼 화면 호출 POST
 	@RequestMapping("/admin/board/insert_board_form.do")
 	public String insert_board_form(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
-		// 사용자권한 처리
-		if(!EgovUserDetailsHelper.isAuthenticated()) {
-			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-	    	return "cmm/uat/uia/EgovLoginUsr";
+		// 사용자권한 처리 new
+		if(!commUtil.getAuthorities()) {
+			model.addAttribute("msg", "관리자그룹만 접근 가능합니다 \\n사용자 홈페이지로 이동");
+	    	return "home.tiles";
 		}
 
 	    LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
@@ -172,11 +172,11 @@ public class AdminController {
 		    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, ModelMap model,
 		    SessionStatus status) throws Exception {
 
-	    	// 사용자권한 처리
-	    	if(!EgovUserDetailsHelper.isAuthenticated()) {
-	    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-	        	return "cmm/uat/uia/EgovLoginUsr";
-	    	}
+		// 사용자권한 처리 new
+		if(!commUtil.getAuthorities()) {
+			model.addAttribute("msg", "관리자그룹만 접근 가능합니다.\\n사용자 홈페이지로 이동");
+	    	return "home.tiles";
+		}
 
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
@@ -494,7 +494,12 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value="/admin/home.do", method=RequestMethod.GET)
-	public String home() throws Exception {
+	public String home(Model model) throws Exception {
+		// 사용자권한 처리 new
+		if(!commUtil.getAuthorities()) {
+			model.addAttribute("msg", "관리자그룹만 접근 가능합니다.\\n사용자 홈페이지로 이동");
+	    	return "home.tiles";
+		}
 		return "admin/home";
 	}
 }

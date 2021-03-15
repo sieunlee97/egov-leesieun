@@ -25,7 +25,7 @@
 </style>
 <script>
 if("${msg}" != ''){
-	if("${msg}" == '삭제'){
+	if("${msg}" == '삭제' || "${msg}" == '회원 탈퇴' ){
 		alert("${msg}가 완료되었습니다.");
 	} else {
 		alert("${msg}이 완료되었습니다.");
@@ -57,7 +57,12 @@ if("${msg}" != ''){
 					<c:if test="${LoginVO.id ne null}">
 						<li><a href="<c:url value='/' />tiles/member/mypage_form.do" title="마이페이지">${LoginVO.name}님 환영합니다.</a></li>
 						<li><a href="<c:url value='/logout.do'/>">로그아웃</a></li>
+						<c:if test="${ROLE_ADMIN ne null}">
 							<li><a href="<c:url value='/'/>admin/home.do">AdminLTE</a></li>
+						</c:if>
+						<c:if test="${ROLE_ADMIN eq null}">
+							<li><a href="<c:url value='/'/>tiles/member/mypage_form.do">MyPage</a></li>
+						</c:if>
 					</c:if>
 				</ul>	
 				<nav>

@@ -73,7 +73,33 @@ public class HomeController {
 	private BoardService boardService;
 	@Inject
 	private MemberService memberService;
-	
+	@RequestMapping("tiles/member/mypage_delete.do")
+	public String mypage_delete(HttpServletRequest request,EmployerInfoVO memberVO, RedirectAttributes rdat) throws Exception {
+		//회원 수정 페이지 DB처리
+		if(memberVO.getPASSWORD() != null && memberVO.getPASSWORD() != "") {
+			String formPassword = memberVO.getPASSWORD();
+			String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getEMPLYR_ID());
+			memberVO.setPASSWORD(encPassword);
+		}
+		memberVO.setEMPLYR_STTUS_CODE("S"); //회원 비활성화로 변경
+		memberService.updateMember(memberVO);
+		rdat.addFlashAttribute("msg", "회원 탈퇴");
+		//세션 날리기
+		request.getSession().invalidate(); //현재 URL의 모둔 LoginVO 세션값 날림
+		return "redirect:/tiles/home.do";
+	}
+	@RequestMapping("/tiles/member/mypage.do")
+	public String mypage (EmployerInfoVO memberVO, RedirectAttributes rdat) throws Exception {
+		//회원 수정 페이지 DB처리
+		if(memberVO.getPASSWORD() != null && memberVO.getPASSWORD() != "") {
+			String formPassword = memberVO.getPASSWORD();
+			String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getEMPLYR_ID());
+			memberVO.setPASSWORD(encPassword);
+		}
+		memberService.updateMember(memberVO);
+		rdat.addFlashAttribute("msg", "수정");
+		return "redirect:/tiles/member/mypage_form.do";
+	}
 	@RequestMapping("/tiles/member/mypage_form.do")
 	public String mypage_form(HttpServletRequest request, Model model) throws Exception {
 		//마이페이지 이동
@@ -523,8 +549,9 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/logout.do")
-	public String logout() throws Exception {
+	public String logout(HttpServletRequest request) throws Exception {
 		RequestContextHolder.getRequestAttributes().removeAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+		request.getSession().invalidate(); //현재 URL의 모둔 LoginVO 세션값 날림
 		return "redirect:/";
 	}
 	

@@ -20,7 +20,7 @@
 		<!-- 메인본문영역 -->
 		<div class="bodytext_area box_inner">
 			<!-- 폼영역 -->
-			<form method="POST" name="mypage_form" action="<c:url value='/' />tiles/mypage.do" class="appForm">
+			<form method="POST" name="mypage_form" action="<c:url value='/' />tiles/member/mypage.do" class="appForm">
 				<fieldset>
 					<legend>마이페이지폼</legend>
 					<p class="info_pilsoo pilsoo_item">필수입력</p>
@@ -33,7 +33,7 @@
 						</li>
 						<li class="clear">
 							<label for="password_lbl" class="tit_lbl pilsoo_item">암호</label>
-							<div class="app_content"><input type="password" name="PASSWORD" class="w100p" id="password_lbl" placeholder="암호를 입력해주세요" required/></div>
+							<div class="app_content"><input type="password" name="PASSWORD" class="w100p" id="password_lbl" placeholder="암호를 입력해주세요"/></div>
 						</li>
 						<li class="clear">
 							<label for="password_hint_lbl" class="tit_lbl pilsoo_item">암호 힌트</label>
@@ -99,7 +99,13 @@
 <script>
 $(document).ready(function(){
 	$("#btn_delete").on("click", function(){
-		alert("- 회원 탈퇴 기능은 준비중입니다 -")
+		//alert("- 회원 탈퇴 기능은 준비중입니다 -");
+		if(confirm("정말로 탈퇴하시겠습니까?")){
+			var form = $("form[name='mypage_form']");
+			form.attr("action", "<c:url value='/' />tiles/member/mypage_delete.do");
+			//$(form "input[name='EMPLYR_STTUS_CODE']").val("S");
+			form.submit();
+		}
 	});
 });
 </script>

@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.let.uat.uia.service.EgovLoginService;
+import egovframework.rte.fdl.string.EgovObjectUtil;
 
 @Controller
 public class CommonUtil {
@@ -29,6 +32,23 @@ public class CommonUtil {
 	
 	@Autowired
 	private EgovMessageSource egovMessageSource;
+	
+	//로그인 인증 / 권한 체크 1개의 메소드로 처리(아래)
+	public Boolean getAuthorities() throws Exception {
+		Boolean authority = Boolean.FALSE;
+		//인증 체크 (LoginVO가 null이면 = 로그인 상태가 아니면)
+		if (EgovObjectUtil.isNull((LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
+			return authority;
+		}
+		//권한 체크 (관리자인지, 일반사용지안지 판단)
+		LoginVO sessionLoginVO = (LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+		EmployerInfoVO memberVO = memberService.viewMember(sessionLoginVO.getId());
+		if("GROUP_00000000000000".equals(memberVO.getGROUP_ID())) {
+			authority = Boolean.TRUE; //관리자
+		}
+		return authority;
+	}
+	
 	
 	/**
 	 * 기존 로그인 처리는 egov 그대로 사용.
@@ -45,6 +65,13 @@ public class CommonUtil {
 		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("") && loginPolicyYn) {
 			//로그인 성공 시
 			request.getSession().setAttribute("LoginVO", resultVO);
+			//로그인 성공 후 관리자 그룹일 때, 관리자 세션 ROLE_ADMIN명 추가
+			//권한 체크 (관리자인지, 일반사용지안지 판단)
+			LoginVO sessionLoginVO = (LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+			EmployerInfoVO memberVO = memberService.viewMember(sessionLoginVO.getId());
+			if("GROUP_00000000000000".equals(memberVO.getGROUP_ID())) {
+				request.getSession().setAttribute("ROLE_ADMIN", memberVO.getGROUP_ID());
+			}
 			return "forward:/tiles/home.do"; //변경2
 		} else {
 			//로그인 실패시 
