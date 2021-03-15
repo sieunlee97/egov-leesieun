@@ -1,6 +1,59 @@
 # 전자정부표준프레임워크 커스터마이징 하기
 **eGovFrame메뉴에서 Start > New Template Project 심플홈 템플릿 만들어서 커스터마이징 작업중**
 
+### 20210315(월)
+- <수업>
+- 회원탈퇴 기능 -> HomeControlelr클래스의 mypage_delete() 메서드
+- 탈퇴 = 회원 상태코드를 비활성화로 변경 후 세션 날림
+
+```java
+memberVO.setEMPLYR_STTUS_CODE("S"); 
+memberService.updateMember(memberVO);
+//세션 날리기
+request.getSession().invalidate(); //현재 URL의 모둔 LoginVO 세션값 날림
+```
+
+- **권한체크**
+- CommonUtil 클래스에 관리자 권한 체크 **getAuthorities()** 메서드 추가
+
+```java
+
+//로그인 인증 + 권한 체크 1개의 메소드로 처리(아래)
+public Boolean getAuthorities() throws Exception {
+	Boolean authority = Boolean.FALSE;
+	//인증 체크 (LoginVO가 null이면 = 로그인 상태가 아니면)
+	if (EgovObjectUtil.isNull((LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
+		return authority;
+	}
+	//권한 체크 (관리자인지, 일반사용지안지 판단)
+	LoginVO sessionLoginVO = (LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+	EmployerInfoVO memberVO = memberService.viewMember(sessionLoginVO.getId());
+	if("GROUP_00000000000000".equals(memberVO.getGROUP_ID())) {
+		authority = Boolean.TRUE; //관리자
+	}
+	return authority;
+}
+```
+- CommonUtil클래스의 로그인 처리에 권한 체크 소스 추가. 로그인 성공 후, 관리자 그룹 세션 처리.
+
+```java
+//권한 체크 (관리자인지, 일반사용지안지 판단)
+LoginVO sessionLoginVO = (LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+EmployerInfoVO memberVO = memberService.viewMember(sessionLoginVO.getId());
+if("GROUP_00000000000000".equals(memberVO.getGROUP_ID())) {
+	request.getSession().setAttribute("ROLE_ADMIN", memberVO.getGROUP_ID());
+}
+```
+- AdminController클래스 권한 체크 부분 소스 변경
+
+```java
+// 사용자권한 처리 new
+if(!commUtil.getAuthorities()) {
+	model.addAttribute("msg", "관리자그룹만 접근 가능합니다.\\n사용자 홈페이지로 이동");
+	return "home.tiles";
+}
+```
+
 ### 20210312(금)
 - <수업>
 - 회원가입 화면 구현.회원가입 기능 추가 완료.
