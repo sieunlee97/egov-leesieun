@@ -263,7 +263,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 	        <artifactId>tiles-extras</artifactId>
 	        <version>3.0.8</version>
 	    </dependency>
-	    
+	    <!-- 스프링 시큐리티 모듈 추가 -->
+	    <dependency>
+		   <groupId>egovframework.rte</groupId>
+		   <artifactId>egovframework.rte.fdl.security</artifactId>
+		   <version>${egovframework.rte.version}</version>
+		</dependency>
 	</dependencies>
 	
     <build>

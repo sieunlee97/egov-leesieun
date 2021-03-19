@@ -1,9 +1,17 @@
 package edu.human.com.util;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.rte.fdl.string.EgovObjectUtil;
 
@@ -55,7 +65,7 @@ public class CommonUtil {
 	 * 단, 로그인 처리 이후 이동할 페이지를 OLD에서 NEW로 변경.
 	 */
 	@RequestMapping(value = "/login_action.do") //변경1
-	public String actionLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, ModelMap model) throws Exception {
+	public String actionLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletResponse response, HttpServletRequest request, ModelMap model) throws Exception {
 
 		// 1. 일반 로그인 처리
 		LoginVO resultVO = loginService.actionLogin(loginVO);
@@ -72,6 +82,30 @@ public class CommonUtil {
 			if("GROUP_00000000000000".equals(memberVO.getGROUP_ID())) {
 				request.getSession().setAttribute("ROLE_ADMIN", memberVO.getGROUP_ID());
 			}
+			//스프링 시큐리티 연동 추가
+			UsernamePasswordAuthenticationFilter springSecurity = null;
+			ApplicationContext act = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+			Map<String,UsernamePasswordAuthenticationFilter> beans = act.getBeansOfType(UsernamePasswordAuthenticationFilter.class);
+			if (beans.size() > 0) {
+	            springSecurity = (UsernamePasswordAuthenticationFilter) beans.values().toArray()[0];
+	            springSecurity.setUsernameParameter("egov_security_username");
+	            springSecurity.setPasswordParameter("egov_security_password");
+	            springSecurity.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(
+	                  request.getServletContext().getContextPath() + "/egov_security_login", "POST"));
+	         } else {
+	            throw new IllegalStateException("No AuthenticationProcessingFilter");
+	         }
+			springSecurity.setContinueChainBeforeSuccessfulAuthentication(false); 
+	         //false이면 chain 처리 되지 않음.. (filter가 아닌 경우 false로...)
+			springSecurity.doFilter(new RequestWrapperForSecurity(request, resultVO.getId(), resultVO.getPassword()), response, null);
+			
+			System.out.println("context-security.xml파일의 jdbcAuthoritiesByUsernameQuery 확인");
+	          List<String> authorities = EgovUserDetailsHelper.getAuthorities();
+	          // 1. authorites 에  권한이 있는지 체크 TRUE/FALSE
+	          System.out.println(authorities.contains("ROLE_ADMIN"));
+	          System.out.println(authorities.contains("ROLE_USER"));
+	          System.out.println(authorities.contains("ROLE_ANONYMOUS"));
+			
 			return "forward:/tiles/home.do"; //변경2
 		} else {
 			//로그인 실패시 
@@ -124,4 +158,36 @@ public class CommonUtil {
         return ret;
     }
 
+}
+
+class RequestWrapperForSecurity extends HttpServletRequestWrapper {
+	private String username = null;
+	private String password = null;
+	public RequestWrapperForSecurity(HttpServletRequest request, String username, String password) {
+		super(request);
+		this.username=username;
+		this.password=password;
+	}
+	
+	@Override
+	public String getRequestURI() {
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/egov_security_login";
+	}
+
+	@Override
+	public String getServletPath() {
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/egov_security_login";
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if (name.equals("egov_security_username")) {
+			return username;
+		}
+		if (name.equals("egov_security_password")) {
+			return password;
+		}
+		return super.getParameter(name);
+	}
+	
 }
