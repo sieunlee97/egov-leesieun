@@ -93,7 +93,8 @@ public class CommonUtil {
 	            springSecurity.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(
 	                  request.getServletContext().getContextPath() + "/egov_security_login", "POST"));
 	         } else {
-	            throw new IllegalStateException("No AuthenticationProcessingFilter");
+	            //throw new IllegalStateException("No AuthenticationProcessingFilter");
+	        	 return "forward:/tiles/home.do"; //context-security.xml에 bean설정 없을때
 	         }
 			springSecurity.setContinueChainBeforeSuccessfulAuthentication(false); 
 	         //false이면 chain 처리 되지 않음.. (filter가 아닌 경우 false로...)

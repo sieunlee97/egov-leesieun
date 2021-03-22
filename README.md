@@ -1,6 +1,103 @@
 # 전자정부표준프레임워크 커스터마이징 하기
 **eGovFrame메뉴에서 Start > New Template Project 심플홈 템플릿 만들어서 커스터마이징 작업중**
 
+### 20210322(월)
+- 순서1. pom.xml 수정 
+- > 주의:egovframework.rte.fdl.security-3.10.0.jar버전으로 해야 하지만, 에러가 발생되어서 3.9.0.jar버전으로 다운그레이션 합니다.
+- 순서2. context-security.xml 생성
+- > 기술참조: https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte3:fdl:server_security:xmlschema_v3_8
+- > leesieun 프로젝트의 security-context.xml의 **인터셉터 url** 내용을** 쿼리로 대체**한다. **스프링 시큐리티 화면 권한을 DB로 제어**한다.
+- 순서3. 그룹 정보 테이블에서 아래와 같이 변경 (lettnauthorgroupinfo 테이블)
+
+'GROUP_00000000000000','ROLE_ADMIN'
+'GROUP_00000000000001','ROLE_USER'
+'GROUP_00000000000002','ROLE_ANONYMOUS'
+
+- authorrole 테이블 생성 후 더미데이터 입력
+
+```sql
+CREATE TABLE IF NOT EXISTS `AUTHORROLE` (
+  `AUTHORROLE_ID` decimal(20,0) NOT NULL,
+  `ROLE_PTTRN` varchar(255) NOT NULL,
+  `AUTHOR_CODE` varchar(255) NOT NULL,
+  `AUTHORROLE_DC` VARCHAR(255) DEFAULT NULL,
+  `SORT_ORDR` decimal(8,0) DEFAULT NULL,
+  `USE_AT` char(1) NOT NULL,
+  PRIMARY KEY (`AUTHORROLE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+```sql
+INSERT INTO AUTHORROLE VALUES(1,'/.*.*.*','ROLE_ANONYMOUS','전체허용',1,'Y');
+INSERT INTO AUTHORROLE VALUES(2,'/cop/com/.*.do.*','ROLE_ANONYMOUS','전체허용',2,'Y');
+INSERT INTO AUTHORROLE VALUES(3,'/cop/bbs/*Master*.do','ROLE_USER','사용자만허용게시판',3,'Y');
+INSERT INTO AUTHORROLE VALUES(4,'/uat/uia/.*.do.*','ROLE_USER','사용자만허용',4,'Y');
+INSERT INTO AUTHORROLE VALUES(5,'/uss/umt/mber/.*.do.*','ROLE_USER','사용자만허용',5,'Y');
+INSERT INTO AUTHORROLE VALUES(6,'/uat/uia/actionLogin.do','ROLE_ANONYMOUS','전체허용',6,'Y');
+INSERT INTO AUTHORROLE VALUES(7,'/uat/uia/egovLoginUsr.do','ROLE_ANONYMOUS','전체허용',7,'Y');
+INSERT INTO AUTHORROLE VALUES(8,'/tiles/login.do','ROLE_ANONYMOUS','전체허용',8,'Y');
+INSERT INTO AUTHORROLE VALUES(9,'/login_action.do','ROLE_ANONYMOUS','전체허용',9,'Y');
+INSERT INTO AUTHORROLE VALUES(10,'/cop/bbs/*Master*.do','ROLE_USER','사용자만허용',10,'Y');
+INSERT INTO AUTHORROLE VALUES(11,'/admin/.*.*.*','ROLE_ADMIN','관리자만전체허용',11,'Y');
+```
+
+- 순서4. context-security.xml에 아래 코드 추가
+
+```xml
+<!-- 아래 Spring Security를 적용하지 않는 경로 설정(Ant pattern 사용) -->
+<security:http pattern="/css/**" security="none"/>
+<security:http pattern="/common/**" security="none"/>
+<security:http pattern="/images/**" security="none"/>
+<security:http pattern="/js/**" security="none"/>
+<security:http pattern="/resources/**" security="none"/>
+<security:http pattern="\A/WEB-INF/jsp/.*\Z" security="none"/>
+
+<egov-security:config id="securityConfig"
+		loginUrl="/tiles/login.do"
+		logoutSuccessUrl="/tiles/home.do"
+		loginFailureUrl="/tiles/login.do?msg_security=1"
+		accessDeniedUrl="/tiles/home.do?msg_security=2"
+ 
+		dataSource="egov.dataSource"
+		jdbcUsersByUsernameQuery="SELECT a.EMPLYR_ID AS USER_ID, a.PASSWORD, 1 AS ENABLED, a.USER_NM, 'USR' AS USER_SE, a.EMAIL_ADRES AS USER_EMAIL, '-' AS ORGNZT_ID, a.ESNTL_ID, '-' AS ORGNZT_NM 
+								FROM LETTNEMPLYRINFO a, LETTNAUTHORGROUPINFO b WHERE a.GROUP_ID = b.GROUP_ID AND a.EMPLYR_ID = ?"
+		jdbcAuthoritiesByUsernameQuery="SELECT a.EMPLYR_ID USER_ID, b.GROUP_NM AUTHORITY 
+										FROM LETTNEMPLYRINFO a, LETTNAUTHORGROUPINFO b WHERE a.GROUP_ID = b.GROUP_ID AND a.EMPLYR_ID = ?"
+		jdbcMapClass="edu.human.com.authorrole.EgovSessionMapping"
+ 
+		requestMatcherType="regex"
+		hash="plaintext"
+		hashBase64="false"
+ 
+		concurrentMaxSessons="2"
+		concurrentExpiredUrl="/tiles/home.do"
+ 
+		defaultTargetUrl="/tiles/home.do"
+ 
+		sniff="false"
+		xframeOptions="SAMEORIGIN" 
+		xssProtection="false" 
+		csrf="false"
+/>
+<egov-security:initializer id="initializer" supportPointcut="false" supportMethod="false" />
+egov-security:secured-object-config id="securedObjectConfig"
+	roleHierarchyString="
+			ROLE_ADMIN > ROLE_USER
+			ROLE_USER > ROLE_ANONYMOUS"
+	sqlRolesAndUrl="
+			SELECT ROLE_PTTRN url, AUTHOR_CODE authority 
+             FROM AUTHORROLE 
+             WHERE USE_AT='Y' ORDER BY SORT_ORDR DESC"
+/>
+```
+
+- 순서5. edu.human.com.authorrole 패키지에 EgovSessionMapping 클래스 생성
+- > context-security.xml의 쿼리 결과를 변수로 담을 공간 생성, 세션에 사용될 값 저장
+- > 사용자 정보 테이블을 쿼리할 떄, EgovUsersByUsernameMapping에 매핑한 후 세션 변수 발생
+- 순서6. CommonUtil..java 클래스에 Spring Security 코딩 추가
+- 순서7. EgovUserDetailsHelper.java의 메서드 수정
+
+
 ### 20210315(월)
 - <수업>
 - 회원탈퇴 기능 -> HomeControlelr클래스의 mypage_delete() 메서드

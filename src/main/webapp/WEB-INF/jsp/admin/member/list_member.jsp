@@ -81,11 +81,14 @@
                       <!-- span은 자리를 차지하지 않음. 텍스트에 배지만 적용하기 위해 -->
 	                      <!-- 권한표시는 부트스트랩 배지 클래스 사용 -->
 	                      <c:choose>
-	                      <c:when test="${memberVO.GROUP_ID eq '관리자그룹'}">
+	                      <c:when test="${memberVO.GROUP_ID eq 'ROLE_ADMIN'}">
 	                       <td><span class="badge bg-danger">${memberVO.GROUP_ID}</span></td>
 	                       </c:when>
-	                      <c:when test="${memberVO.GROUP_ID ne '관리자그룹'}">
+	                      <c:when test="${memberVO.GROUP_ID eq 'ROLE_USER'}">
 	                       <td><span class="badge bg-success">${memberVO.GROUP_ID}</span></td>
+	                      </c:when>
+	                      <c:when test="${memberVO.GROUP_ID eq 'ROLE_ANONYMOUS'}">
+	                       <td><span class="badge bg-default">${memberVO.GROUP_ID}</span></td>
 	                      </c:when>
 	                      </c:choose>
                        <!-- <span class="badge bg-danger">${memberVO.GROUP_ID}</span>  -->
