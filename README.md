@@ -10,17 +10,14 @@
 ### 20210322(월)
 - <수업>
 - 순서1. pom.xml 수정 
-- > 주의:egovframework.rte.fdl.security-3.10.0.jar버전으로 해야 하지만, 에러가 발생되어서 3.9.0.jar버전으로 다운그레이션 합니다.
+- > 주의:egovframework.rte.fdl.security-3.10.0.jar버전으로 해야 하지만, 에러가 발생하여 3.9.0.jar버전으로 다운그레이션.
 - 순서2. context-security.xml 생성
+- 기술참조1-5단계 실행: https://github.com/miniplugin/egov
 - > 기술참조: https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte3:fdl:server_security:xmlschema_v3_8
+- 이전 leesieun프로젝트는 xml에 화면(url) 권한에 대한 설정이 존재.
+- egov 프로젝트는 xml에 화면(url) 권한에 대한 설정이 존재 X, authorrole 테이블에 위 화면 권한 설정 존재.
 - > leesieun 프로젝트의 security-context.xml의 **인터셉터 url** 내용을** 쿼리로 대체**한다. **스프링 시큐리티 화면 권한을 DB로 제어**한다.
-- 순서3. 그룹 정보 테이블에서 아래와 같이 변경 (lettnauthorgroupinfo 테이블)
-
-'GROUP_00000000000000','ROLE_ADMIN'
-'GROUP_00000000000001','ROLE_USER'
-'GROUP_00000000000002','ROLE_ANONYMOUS'
-
-- authorrole 테이블 생성 후 더미데이터 입력
+- *스프링 시큐리티 화면권한을 DB로 제어하기(입력순서중요): 관리자에서 추가/삭제/수정할 수 있는 기능 추가(아래)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `AUTHORROLE` (
@@ -47,6 +44,12 @@ INSERT INTO AUTHORROLE VALUES(9,'/login_action.do','ROLE_ANONYMOUS','전체허�
 INSERT INTO AUTHORROLE VALUES(10,'/cop/bbs/*Master*.do','ROLE_USER','사용자만허용',10,'Y');
 INSERT INTO AUTHORROLE VALUES(11,'/admin/.*.*.*','ROLE_ADMIN','관리자만전체허용',11,'Y');
 ```
+
+- 순서3. 그룹 정보 테이블에서 아래와 같이 변경 (lettnauthorgroupinfo 테이블)
+
+'GROUP_00000000000000','ROLE_ADMIN'
+'GROUP_00000000000001','ROLE_USER'
+'GROUP_00000000000002','ROLE_ANONYMOUS'
 
 - 순서4. context-security.xml에 아래 코드 추가
 
@@ -101,9 +104,14 @@ egov-security:secured-object-config id="securedObjectConfig"
 - 순서5. edu.human.com.authorrole 패키지에 EgovSessionMapping 클래스 생성
 - > context-security.xml의 쿼리 결과를 변수로 담을 공간 생성, 세션에 사용될 값 저장
 - > 사용자 정보 테이블을 쿼리할 떄, EgovUsersByUsernameMapping에 매핑한 후 세션 변수 발생
-- 순서6. CommonUtil..java 클래스에 Spring Security 코딩 추가
-- 순서7. EgovUserDetailsHelper.getAuthorities() 메서드 수정
-- 순서8. web.xml 필터 체인 부분 확인 (필수)
+- 순서6. web.xml 필터 체인 부분 확인 (필수)
+- 순서7. CommonUtil.java 클래스에 Spring Security 코딩 추가
+- 순서8. EgovUserDetailsHelper.getAuthorities() 메서드 복사 후 CommonUtil 클래스에 생성 -> 인증된 사용자의 권한 정보를 가져온다
+- 아래 내용을 입력해서 관리자만 공지사항 입력 가능하게 처리.
+- INSERT INTO AUTHORROLE VALUES(12,'/tiles/board/insert_board_form.*BBSMSTR_AAAAAAAAAAAA','ROLE_ADMIN','관리자만전체허용',12,'Y');
+-스프링 시큐리티 화면권한 AUTHORROLE테이블을 관리자에서 지정할 수 있게 추가(R만): 기술참조 1)~4)작업
+- 스프링 시큐리티 화면권한 AUTHORROLE테이블을 관리자에서 지정할 수 수 있게 추가(CRUD모두)
+
 
 ### 20210315(월)
 - <수업>
