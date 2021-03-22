@@ -24,6 +24,9 @@
 
 </style>
 <script>
+if("${param.msg_security}" == 2){
+	alert("접근 권한이 없습니다. 메인 화면으로 이동합니다.");
+}
 if("${msg}" != ''){
 	if("${msg}" == '삭제' || "${msg}" == '회원 탈퇴' ){
 		alert("${msg}가 완료되었습니다.");

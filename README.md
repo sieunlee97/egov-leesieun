@@ -1,7 +1,14 @@
 # 전자정부표준프레임워크 커스터마이징 하기
 **eGovFrame메뉴에서 Start > New Template Project 심플홈 템플릿 만들어서 커스터마이징 작업중**
 
+### 20210323(화)
+- <작업예정>
+- 화면 권한 추가 : 관리자단 권한 관리 메뉴 추가 후 CRDU 작업 예정.
+- 글 수정/삭제는 본인이 작성한 글만 가능하도록 처리.
+
+
 ### 20210322(월)
+- <수업>
 - 순서1. pom.xml 수정 
 - > 주의:egovframework.rte.fdl.security-3.10.0.jar버전으로 해야 하지만, 에러가 발생되어서 3.9.0.jar버전으로 다운그레이션 합니다.
 - 순서2. context-security.xml 생성
@@ -95,8 +102,8 @@ egov-security:secured-object-config id="securedObjectConfig"
 - > context-security.xml의 쿼리 결과를 변수로 담을 공간 생성, 세션에 사용될 값 저장
 - > 사용자 정보 테이블을 쿼리할 떄, EgovUsersByUsernameMapping에 매핑한 후 세션 변수 발생
 - 순서6. CommonUtil..java 클래스에 Spring Security 코딩 추가
-- 순서7. EgovUserDetailsHelper.java의 메서드 수정
-
+- 순서7. EgovUserDetailsHelper.getAuthorities() 메서드 수정
+- 순서8. web.xml 필터 체인 부분 확인 (필수)
 
 ### 20210315(월)
 - <수업>

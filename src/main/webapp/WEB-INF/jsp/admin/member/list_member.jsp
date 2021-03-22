@@ -88,7 +88,7 @@
 	                       <td><span class="badge bg-success">${memberVO.GROUP_ID}</span></td>
 	                      </c:when>
 	                      <c:when test="${memberVO.GROUP_ID eq 'ROLE_ANONYMOUS'}">
-	                       <td><span class="badge bg-default">${memberVO.GROUP_ID}</span></td>
+	                       <td><span class="badge bg-secondary">${memberVO.GROUP_ID}</span></td>
 	                      </c:when>
 	                      </c:choose>
                        <!-- <span class="badge bg-danger">${memberVO.GROUP_ID}</span>  -->

@@ -53,7 +53,6 @@ public class EgovUserDetailsHelper {
 				// log.debug("## authentication object is null!!");
 				return null;
 			}
-			
 			return listAuth;
 		}
 		
