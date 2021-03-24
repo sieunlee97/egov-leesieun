@@ -12,6 +12,8 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.impl.SimpleLog;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,6 +52,8 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 public class HomeController {
+	
+	private Logger logger = Logger.getLogger(SimpleLog.class);
 	
 	@Autowired
 	private EgovBBSAttributeManageService bbsAttrbService;
@@ -292,7 +296,10 @@ public class HomeController {
 		if (isAuthenticated) {
 		    bmvo = bbsAttrbService.selectBBSMasterInf(master);
 		    bdvo = bbsMngService.selectBoardArticle(boardVO);
+		    logger.debug("디버그 : 인증받은 사용자 정보를 저장한 객체 - "+ user.getUniqId());
+		    logger.debug("디버그 : 게시판의 등록자의 아이디 - "+ bdvo.getFrstRegisterId());
 		}
+			
 
 		model.addAttribute("result", bdvo); //게시물 정보가 담긴 오브젝트(게시물제목, 내용, 첨부파일id,...)
 		model.addAttribute("bdMstr", bmvo); //게시판 정보가 담긴 오브젝트(게시판명, 게시판id,...)
@@ -304,6 +311,12 @@ public class HomeController {
 		    bmvo.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
 		}
 		model.addAttribute("brdMstrVO", bmvo); //위에서 정의된 bdMstr 모델과 같음. 두명 이상이 만들어서
+		
+		//게시물 작성자와 로그인한 사용자 활동ID 비교-------------------------------------------------------
+		if(user.getUniqId() != bdvo.getFrstRegisterId()) {
+			model.addAttribute("msg", "본인이 작성한 글만 수정이 가능합니다.\\n이전 페이지로 이동");
+			return "board/view_board.tiles";
+		}
 		////-----------------------------
 		return "board/update_board.tiles";
 	}

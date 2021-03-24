@@ -33,7 +33,6 @@ import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.rte.fdl.string.EgovObjectUtil;
 
