@@ -120,6 +120,13 @@ if("${msg}" != ''){
               </p>
             </a>
             <ul class="nav nav-treeview">
+           	 <li class="nav-item">
+                <a href="<c:url value='/admin/authorrole/list_author.do' />" class="nav-link">
+                  <!-- 메뉴 선택 시 활성화 active 되는 것은 jquery로 만들 예정 -->
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>권한 관리</p>
+                </a>
+              </li>
               <li class="nav-item">
                 <a href="<c:url value='/admin/member/list_member.do' />" class="nav-link">
                   <!-- 메뉴 선택 시 활성화 active 되는 것은 jquery로 만들 예정 -->

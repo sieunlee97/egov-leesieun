@@ -67,6 +67,14 @@ public class AdminController {
 	@Autowired
 	private EgovFileMngUtil fileUtil;
 	
+	//권한 관리 리스트 호출 GET
+	@RequestMapping(value="/admin/authorrole/list_author.do", method=RequestMethod.GET)
+	public String list_author() throws Exception {
+		//Get, Set VO 생성
+		
+		return "admin/authorrole/list_author";
+	}
+	
 	//게시물 등록 DAO처리 호출POST
 	@RequestMapping("/admin/board/insert_board.do")
 	public String insert_board(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
