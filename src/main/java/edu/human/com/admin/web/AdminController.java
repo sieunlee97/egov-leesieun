@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.logging.impl.SimpleLog;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +25,7 @@ import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import edu.human.com.authorrole.service.AuthorRoleService;
 import edu.human.com.authorrole.service.AuthorRoleVO;
+import edu.human.com.authorrole.service.impl.AuthorRoleDAO;
 import edu.human.com.board.service.BoardService;
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
@@ -46,6 +49,8 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 public class AdminController {
+	
+	private Logger logger = Logger.getLogger(SimpleLog.class);
 	@Inject
 	private MemberService memberService;
 	@Inject
@@ -54,6 +59,8 @@ public class AdminController {
 	private BoardService boardService;
 	@Inject
 	private AuthorRoleService authorRoleService;
+	@Inject
+	private AuthorRoleDAO authorRoleDAO;
 	//스프링빈(new키워드 만드는 오브젝트X) 오브젝트를 사용하는 방법
 	// @Inject(자바8이상), @Autowired(많이사용), @Resource(자바7이하)
 	@Autowired
@@ -78,8 +85,10 @@ public class AdminController {
 		if(pageVO.getPage() == null ) {	pageVO.setPage(1); }
 		pageVO.setPerPageNum(5);
 		pageVO.setQueryPerPageNum(10);
-		List<AuthorRoleVO> authorRoleList = authorRoleService.selectAuthorRole(pageVO);
-		pageVO.setTotalCount(authorRoleList.size());
+		List<AuthorRoleVO> authorRoleList = authorRoleService.selectAuthorRole(pageVO);	
+		int countAuthorRole = authorRoleDAO.countAuthorRole(pageVO);
+		pageVO.setTotalCount(countAuthorRole);
+		//logger.debug("디버그 : authorRoleList의 사이즈 = "+authorRoleList.size());
 		model.addAttribute("authorRoleList",authorRoleList);
 		return "admin/authorrole/list_author";
 	}

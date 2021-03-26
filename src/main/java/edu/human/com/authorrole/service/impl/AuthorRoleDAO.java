@@ -10,9 +10,11 @@ import edu.human.com.util.PageVO;
 
 @Repository
 public class AuthorRoleDAO extends EgovComAbstractMapper{
+	public int countAuthorRole(PageVO pageVO) throws Exception {
+		return selectOne("authorroleMapper.countAuthorRole", pageVO);
+	}
 	public List<AuthorRoleVO> selectAuthorRole(PageVO pageVO) throws Exception {
 		List<AuthorRoleVO> authorRoleList = selectList("authorroleMapper.selectAuthorRole", pageVO);
 		return authorRoleList;
 	}
-
 }
