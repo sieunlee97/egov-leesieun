@@ -9,7 +9,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">화면 권한 리스트</h1>
+            <h1 class="m-0">화면 권한 리스트 </h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -18,6 +18,9 @@
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
+        <div>
+        	<span style="font-size:12px; font-weight:bold; color:red;">주의) 추가/수정/삭제 시 서버를 재시작해야 권한 적용됩니다.</span>
+        </div>
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
@@ -61,38 +64,24 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>EMPLYR_ID</th> <!-- 테이블 헤드 타이틀태그 th -->
-                      <th>USER_NM</th>
-                      <th>EMAIL_ADRES</th>
-                      <th>EMPLYR_STTUS_CODE</th>
-                      <th>SBSCRB_DE</th>
-                      <th>GROUP_ID</th>
+                      <!-- 테이블 헤드 타이틀태그 th -->
+                      <th>ROLE_PTTRN</th>
+                      <th>AUTHOR_CODE</th>
+                      <th>AUTHORROLE_DC</th>
+                      <th>SORT_ORDR</th>
+                      <th>USE_AT</th>
                     </tr>
                   </thead>
                   <tbody>
-                  <c:forEach items="${listMember}" var="memberVO">
+                  <c:forEach items="${authorRoleList}" var="vo">
                     <tr>
-                      <td><a href="<c:url value='/admin/member/view_member.do?emplyr_id=&amp;pageVO=&amp;search_type=&amp;search_keyword=' />"></a></td> <!-- table data 태그 -->
+                      <td><a href="<c:url value='/admin/authorrole/view_authorrole.do?authorrole_id=${vo.AUTHORROLE_ID}&page=${pageVO.page}&search_type${pageVO.search_type}=&search_keyword=${pageVO.search_keyword}' />">
+                      ${vo.ROLE_PTTRN}</a></td> <!-- table data 태그 -->
                       <!-- 위의 링크a 값은 리스트가 늘어날수록 동적으로 user_id값이 변하게 된다. 개발자가 jsp처리 -->
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>    
-                      <!-- span은 자리를 차지하지 않음. 텍스트에 배지만 적용하기 위해 -->
-	                      <!-- 권한표시는 부트스트랩 배지 클래스 사용 -->
-	                      <c:choose>
-	                      <c:when test="${memberVO.GROUP_ID eq 'ROLE_ADMIN'}">
-	                       <td><span class="badge bg-danger">${memberVO.GROUP_ID}</span></td>
-	                       </c:when>
-	                      <c:when test="${memberVO.GROUP_ID eq 'ROLE_USER'}">
-	                       <td><span class="badge bg-success">${memberVO.GROUP_ID}</span></td>
-	                      </c:when>
-	                      <c:when test="${memberVO.GROUP_ID eq 'ROLE_ANONYMOUS'}">
-	                       <td><span class="badge bg-secondary">${memberVO.GROUP_ID}</span></td>
-	                      </c:when>
-	                      </c:choose>
-                       <!-- <span class="badge bg-danger">${memberVO.GROUP_ID}</span>  -->
-                     
+                      <td>${vo.AUTHOR_CODE}</td>
+                      <td>${vo.AUTHORROLE_DC}</td>
+                      <td>${vo.SORT_ORDR}</td>
+                      <td>${vo.USE_AT}</td>    
                     </tr>
                     </c:forEach>
                   </tbody>
