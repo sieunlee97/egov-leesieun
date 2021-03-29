@@ -9,7 +9,32 @@
 .view_detail img:hover {
 	opacity:1;
 }
+@media all and (min-width:801px){
+	.fix_height {
+		height:440px;
+		line-height:440px;
+		overflow:hidden;
+	}
+}
 </style>
+<script>
+$(document).ready(function(){
+	var w = $(window).width();
+	//페이지 로딩시 1회만 실행
+	if(w>801) {
+		$(".fix_height").css({"height":(w/3)+"px","line-height":w/3+"px"});
+	}
+	//창 리사이징 이벤트 발생시, 반응형 코딩 추가(사용자가 창크기를 마음대로 조정시 height 자동조정되도록)
+	$(window).resize(function(){
+		var w = $(window).width();
+		if(w>801) {
+			$(".fix_height").css({"height":(w/3)+"px","line-height":w/3+"px"});
+		}else{
+			$(".fix_height").css({"height":"inherit","line-height":"inherit"});
+		}
+	});
+});
+</script>
 	<!-- 메인콘텐츠영역 -->
 	<div id="container">
 		<!-- 모바일+PC 공통슬라이드영역 -->
@@ -64,12 +89,14 @@
 					<c:forEach items="${galleryList}" var="galleryVO">
 						<li class="view_detail" style="cursor:pointer;">
 							<form name="view_form" action="<c:url value='/tiles/board/view_board.do' />" method="post">
+								<div class="fix_height">
 								<c:if test="${empty galleryVO.atchFileId}">
 									<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="이미지가 없습니다." />
 								</c:if>
 								<c:if test="${not empty galleryVO.atchFileId}">
 									<img class="img_topplace" src="<c:url value='/' />tiles/board/previewImage.do?atchFileId=${galleryVO.atchFileId}" />
 								</c:if>
+								</div>
 								<h3>${galleryVO.nttSj}</h3>
 								<p class="txt">
 								<!--<c:out value="${galleryVO.nttCn.replaceAll('\\\<.*?\\\>','')}" />-->

@@ -37,10 +37,10 @@ public class MemberDAO extends EgovComAbstractMapper {
 		update("memberMapper.updateMember", employerInfoVO);
 	}
 	public Map<Object, Object> selectCodeMap(String code_id) throws Exception {
-		return selectMap("memberMapper.selectCodeMap", code_id, "CODE");
+		return selectMap("memberMapper.selectCodeMap", code_id, "code");
 	}
 	public Map<Object, Object> selectGroupMap() throws Exception {
 		//memberMapper 쿼리 호출
-		return selectMap("memberMapper.selectGroupMap", "GROUP_ID");
+		return selectMap("memberMapper.selectGroupMap", "group_id");
 	}
 }

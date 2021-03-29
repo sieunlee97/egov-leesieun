@@ -48,7 +48,7 @@
                   	<label for="AUTHOR_CODE">AUTHOR_CODE</label>
                   	<select class="form-control" name="AUTHOR_CODE" id="AUTHOR_CODE">
                   		<c:forEach items="${groupMap}" var="sub">
-                  			<option value="${sub.value.GROUP_NM}" <c:out value="${(result.AUTHOR_CODE eq sub.value.GROUP_NM)? 'selected':''}" /> >${sub.value.GROUP_NM}</option>
+                  			<option value="${sub.value.group_nm}" <c:out value="${(result.AUTHOR_CODE eq sub.value.group_nm)? 'selected':''}" /> >${sub.value.group_nm}</option>
                   		</c:forEach>
                		</select>
                   </div>

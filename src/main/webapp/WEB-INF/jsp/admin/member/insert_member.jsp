@@ -85,7 +85,7 @@
                   	<select class="form-control" name="EMPLYR_STTUS_CODE" id="EMPLYR_STTUS_CODE">
                		<c:forEach items="${codeMap}" var="sub">
                   		<!-- Key is ${detailCode.value.CODE} and  Value is ${detailCode.value.CODE_NM}<br> -->
-                  		<option value="${sub.value.CODE}">${sub.value.CODE_NM}</option>
+                  		<option value="${sub.value.code}">${sub.value.code_nm}</option>
                   	</c:forEach>
                		</select>
                		<!-- 위 코드 설명 : 맵 자료형을 jstl에서 출력하기(아래) -->
@@ -104,7 +104,7 @@
                   	<label for="GROUP_ID">GROUP_ID</label>
                   	<select class="form-control" name="GROUP_ID" id="GROUP_ID">
                   		<c:forEach items="${groupMap}" var="sub">
-                  			<option value="${sub.value.GROUP_ID}">${sub.value.GROUP_NM}</option>
+                  			<option value="${sub.value.group_id}">${sub.value.group_nm}</option>
                   		</c:forEach>
                		</select>
                   </div>
