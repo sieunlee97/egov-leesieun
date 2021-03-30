@@ -2,6 +2,34 @@
 **eGovFrame메뉴에서 Start > New Template Project 심플홈 템플릿 만들어서 커스터마이징 작업중**
 
 ### 20210329(월)
+- <수업>
+- [X] join.jsp 수정
+- <input type="hidden" name="GROUP_ID" value=**"GROUP_00000000000001"**> 변경
+- [X] 최근 게시판 미리보기 CSS 수정
+- jQuery로 반응형 디자인 작성
+
+```javascript
+<script>
+$(function(){
+	var w = $(window).width();
+	//페이지 로딩시 1회만 실행
+	if(w>801) {
+		$(".fix_height").css({"height":(w/3)+"px","line-height":w/3+"px"});
+	}
+	//창 리사이징 이벤트 발생시, 반응형 코딩 추가(사용자가 창크기를 마음대로 조정시 height 자동조정되도록)
+	$(window).resize(function(){
+		var w = $(window).width();
+		if(w>801) {
+			$(".fix_height").css({"height":(w/3)+"px","line-height":w/3+"px"});
+		}else{
+			$(".fix_height").css({"height":"inherit","line-height":"inherit"});
+		}
+	});
+});
+</script>
+```
+- [X] hashMap에 사용되는 변수 소문자로 변경
+- member_mysql.xml, MemberService, MemberServiceImpl, MemberDAO, AdminController
 
 
 ### 20210324(수)

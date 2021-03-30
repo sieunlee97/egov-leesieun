@@ -269,6 +269,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		   <artifactId>egovframework.rte.fdl.security</artifactId>
 		   <version>3.9.0</version>
 		</dependency>
+		<!-- postgreSQL driver -->
+		<dependency>
+           <groupId>org.postgresql</groupId>
+           <artifactId>postgresql</artifactId>
+           <version>42.2.5</version>
+      </dependency>
 	</dependencies>
 	
     <build>
