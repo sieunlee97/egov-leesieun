@@ -1,6 +1,17 @@
 # 전자정부표준프레임워크 커스터마이징 하기
 **eGovFrame메뉴에서 Start > New Template Project 심플홈 템플릿 만들어서 커스터마이징 작업중**
 
+### 20210330(화)
+- **PostgreSQL로 마이그레이션**
+- 1. 페이징 Query 변경 : LIMIT #{queryPerPageNum} OFFSET #{queryStartNo}
+- > 변경 전) LIMIT #{queryStartNo}, #{queryPerPageNum}
+- 2. Null 체크 변경 : IFNULL > COALESCE
+- 3. 날짜 출력 Query 변경 : 
+- DATE_FORMAT -> TO_CHAR(필드, 'YYYY-MM-DD')
+- %Y%m%d%H%i -> YYYY-MM-DD HH24:MI
+- 4. 현재 일시 	Query 변경 : sysdate() -> current_timestamp
+
+
 ### 20210329(월)
 - <수업>
 - [X] join.jsp 수정

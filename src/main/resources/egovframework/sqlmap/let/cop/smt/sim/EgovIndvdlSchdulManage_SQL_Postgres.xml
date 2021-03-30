@@ -35,20 +35,20 @@
 	<!-- 메인페이지/일정관리조회 -->  
 	<select id="IndvdlSchdulManage.selectIndvdlSchdulManageMainList" parameterClass="java.util.Map" resultClass="egovMap">
 		SELECT 
-			DATE_FORMAT(sysdate(),'%Y-%m-%d') TO_DAY, 
+			TO_CHAR(current_timestamp(),'YYYY-MM-DD') TO_DAY, 
 			A.SCHDUL_ID,
 			A.SCHDUL_SE,
 			A.SCHDUL_DEPT_ID,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BGNDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BGNDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
 			A.SCHDUL_IPCR_CODE,
 			A.SCHDUL_CHARGER_ID,		
 			A.ATCH_FILE_ID,
-			DATE_FORMAT(A.FRST_REGIST_PNTTM,'%Y-%m-%d') FRST_REGIST_PNTTM,
+			TO_CHAR(A.FRST_REGIST_PNTTM,'YYYY-MM-DD') FRST_REGIST_PNTTM,
 			A.FRST_REGISTER_ID,
 			A.LAST_UPDT_PNTTM,
 			A.LAST_UPDUSR_ID,
@@ -60,9 +60,9 @@
 		
 		<![CDATA[
 		AND ( 
-		 ( SUBSTRING(A.SCHDUL_BEGINDE,1,8) > DATE_FORMAT(sysdate(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) <= DATE_FORMAT(sysdate(),'%Y%m%d'))
+		 ( SUBSTRING(A.SCHDUL_BEGINDE,1,8) > TO_CHAR(current_timestamp(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) <= TO_CHAR(current_timestamp(),'%Y%m%d'))
 		OR
-		 ( SUBSTRING(A.SCHDUL_ENDDE,1,8) >DATE_FORMAT(sysdate(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) <= DATE_FORMAT(sysdate(),'%Y%m%d'))
+		 ( SUBSTRING(A.SCHDUL_ENDDE,1,8) >TO_CHAR(current_timestamp(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) <= TO_CHAR(current_timestamp(),'%Y%m%d'))
 		) 
 		]]>
 		
@@ -78,8 +78,8 @@
 			A.SCHDUL_SE,
 			A.SCHDUL_DEPT_ID,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BGNDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BGNDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
@@ -100,7 +100,7 @@
 	 
 		 <isNotEmpty property="searchMonth">
 		 	<isNotEqual property="searchMonth" compareValue="">
-		 	 AND (#searchMonth# BETWEEN SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'), 1, 6)  AND SUBSTRING(DATE_FORMAT(A.SCHDUL_ENDDE,'%Y%m%d'), 1, 6) ) 
+		 	 AND (#searchMonth# BETWEEN SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'), 1, 6)  AND SUBSTRING(TO_CHAR(A.SCHDUL_ENDDE,'%Y%m%d'), 1, 6) ) 
 		 	</isNotEqual>
 		 </isNotEmpty>
 	 
@@ -108,15 +108,15 @@
 	 <isEqual property="searchMode" compareValue="WEEK">
 	 <![CDATA[ 		 
 		AND ( 
-		 ( SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) > #schdulBgnde# AND SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) <= #schdulEndde#)
+		 ( SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) > #schdulBgnde# AND SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) <= #schdulEndde#)
 		OR
-		 ( SUBSTRING(DATE_FORMAT(A.SCHDUL_ENDDE,'%Y%m%d'),1,8) > #schdulBgnde# AND SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) <= #schdulEndde#)
+		 ( SUBSTRING(TO_CHAR(A.SCHDUL_ENDDE,'%Y%m%d'),1,8) > #schdulBgnde# AND SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) <= #schdulEndde#)
 		) 
 	]]>
 	 </isEqual>
 	 <isEqual property="searchMode" compareValue="DAILY">
 	 <![CDATA[
-	 	 AND (#searchDay# BETWEEN SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'), 1, 8)  AND SUBSTRING(DATE_FORMAT(A.SCHDUL_ENDDE,'%Y%m%d'), 1, 8) )
+	 	 AND (#searchDay# BETWEEN SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'), 1, 8)  AND SUBSTRING(TO_CHAR(A.SCHDUL_ENDDE,'%Y%m%d'), 1, 8) )
 	  ]]> 
 	 </isEqual>
 	 </isNotEmpty>
@@ -139,8 +139,8 @@
 			A.SCHDUL_DEPT_ID,
 			(SELECT ORGNZT_NM FROM LETTNORGNZTINFO WHERE ORGNZT_ID = A.SCHDUL_DEPT_ID) SCHDUL_DEPT_NAME,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BEGINDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BEGINDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
@@ -166,8 +166,8 @@
 			A.SCHDUL_SE,
 			A.SCHDUL_DEPT_ID,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BGNDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BGNDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
@@ -236,7 +236,7 @@
 			SCHDUL_CHARGER_ID=#schdulChargerId#,
 			ATCH_FILE_ID=#atchFileId#,
 			REPTIT_SE_CODE=#reptitSeCode#,
-			LAST_UPDT_PNTTM = sysdate(),
+			LAST_UPDT_PNTTM = current_timestamp(),
 			LAST_UPDUSR_ID = #lastUpdusrId#
 		WHERE SCHDUL_ID = #schdulId#
 	</update>
@@ -249,8 +249,8 @@
 			A.SCHDUL_DEPT_ID,
 			(SELECT ORGNZT_NM FROM LETTNORGNZTINFO WHERE ORGNZT_ID = A.SCHDUL_DEPT_ID) SCHDUL_DEPT_NAME,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BGNDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BGNDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
@@ -295,8 +295,8 @@
 			#schdulSe#,
 			#schdulDeptId#,
 			#schdulKindCode#,
-			STR_TO_DATE(DATE_FORMAT(#schdulBgnde#,'%Y %m %d %T'), '%Y %m %d %T'),
-			STR_TO_DATE(DATE_FORMAT(#schdulEndde#,'%Y %m %d %T'), '%Y %m %d %T'),
+			STR_TO_DATE(TO_CHAR(#schdulBgnde#,'%Y %m %d %T'), '%Y %m %d %T'),
+			STR_TO_DATE(TO_CHAR(#schdulEndde#,'%Y %m %d %T'), '%Y %m %d %T'),
 			#schdulNm#,
 			#schdulCn#,
 			#schdulPlace#,
@@ -304,9 +304,9 @@
 			#schdulChargerId#,
 			#atchFileId#,
 			#reptitSeCode#,    
-			sysdate(),
+			current_timestamp(),
 			#frstRegisterId#,
-			sysdate(),
+			current_timestamp(),
 			#lastUpdusrId# 
 		)
 

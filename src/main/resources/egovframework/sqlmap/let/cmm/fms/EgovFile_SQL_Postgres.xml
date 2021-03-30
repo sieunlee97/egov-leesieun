@@ -52,7 +52,7 @@
 			INSERT INTO LETTNFILE
 			(ATCH_FILE_ID, CREAT_DT, USE_AT)
 			VALUES
-			( #atchFileId#, SYSDATE(), 'Y')			
+			( #atchFileId#, current_timestamp(), 'Y')			
 		]]>
 	</insert>
 	
@@ -79,7 +79,7 @@
  	
 	<select id="FileManageDAO.getMaxFileSN" parameterClass="FileVO" resultClass="java.lang.Integer">
 		<![CDATA[
-			SELECT IFNULL(MAX(FILE_SN),0)+1 AS FILE_SN
+			SELECT COALESCE(MAX(FILE_SN),0)+1 AS FILE_SN
 			FROM LETTNFILEDETAIL
 			WHERE ATCH_FILE_ID =  #atchFileId#		
 		]]>

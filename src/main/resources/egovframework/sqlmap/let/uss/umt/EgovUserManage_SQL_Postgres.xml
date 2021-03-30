@@ -126,7 +126,7 @@ FROM(
                     #orgnztId#          ,
                     #insttCode#         ,
                     #emplyrSttusCode#   ,
-                    sysdate()           ,
+                    current_timestamp()           ,
                     #subDn#             )
         ]]>
     </insert>

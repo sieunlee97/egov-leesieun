@@ -38,7 +38,7 @@ public class EgovSessionMapping extends EgovUsersByUsernameMapping {
 		boolean strEnabled = rs.getBoolean("enabled");
 		String strUserNm = rs.getString("user_nm");
 		String strUserSe = rs.getString("user_se");
-		String strUserEmail = rs.getNString("user_email");
+		String strUserEmail = rs.getString("user_email");
 		String strOrgnztId = rs.getString("orgnzt_id");
 		String strUniqId = rs.getString("esntl_id");
 		String strOrgnztNm = rs.getString("orgnzt_nm");
