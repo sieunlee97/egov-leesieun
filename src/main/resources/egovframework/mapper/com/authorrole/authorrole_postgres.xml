@@ -37,20 +37,20 @@ WHERE AUTHORROLE_ID = #{AUTHORROLE_ID}
 </select>
 
 <insert id="insertAuthorRole">
-INSERT INTO authorrole (
-	(SELECT AUTHORROLE_ID+1 FROM authorrole ORDER BY AUTHORROLE_ID DESC LIMIT 1),
-	ROLE_PTTRN,
-	AUTHOR_CODE,
-	AUTHORROLE_DC,
-	SORT_ORDR,
-	USE_AT
-) VALUES (
-	#{AUTHORROLE_ID},
-	#{ROLE_PTTRN},
-	#{AUTHOR_CODE},
-	#{AUTHORROLE_DC},
-	#{SORT_ORDR},
-	#{USE_AT}
+insert into authorrole (
+AUTHORROLE_ID,
+ROLE_PTTRN,
+AUTHOR_CODE,
+AUTHORROLE_DC,
+SORT_ORDR,
+USE_AT
+) values (
+(select AUTHORROLE_ID+1 from authorrole order by AUTHORROLE_ID desc limit 1),
+#{ROLE_PTTRN},
+#{AUTHOR_CODE},
+#{AUTHORROLE_DC},
+#{SORT_ORDR},
+#{USE_AT}
 )
 </insert>
 
